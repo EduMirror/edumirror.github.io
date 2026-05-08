@@ -1,0 +1,1973 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>EduMirror</title>
+  <meta name="description" content="EduMirror project page: modeling educational social dynamics with value-driven multi-agent simulation." />
+  <link rel="icon" type="image/png" href="assets/icon.png" />
+
+  <style>
+    :root{
+      --bg:#fff8ed;
+      --bg2:#f3f0ff;
+      --panel:rgba(255,255,255,.84);
+      --panel2:#fffdf8;
+      --line:rgba(92, 83, 197, .16);
+      --line2:rgba(255, 155, 38, .2);
+      --text:#233047;
+      --muted:#637086;
+      --soft:#34445c;
+      --cyan:#5d5be0;
+      --green:#ff9a2f;
+      --amber:#42a7e8;
+      --rose:#ff799a;
+      --maxw:1280px;
+    }
+
+    *{ box-sizing:border-box; }
+    html{
+      min-height:100%;
+      scroll-behavior:smooth;
+      background:var(--bg);
+    }
+    body{
+      margin:0;
+      min-height:100%;
+      color:var(--text);
+      font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;
+      line-height:1.55;
+      background:
+        radial-gradient(760px 520px at 12% 12%, rgba(255, 167, 56, .25), transparent 62%),
+        radial-gradient(720px 520px at 86% 8%, rgba(111, 104, 230, .2), transparent 58%),
+        radial-gradient(780px 540px at 68% 72%, rgba(89, 180, 232, .14), transparent 64%),
+        linear-gradient(180deg, #fff8ed 0%, #f9fbff 48%, #f5f0ff 100%);
+      -webkit-font-smoothing:antialiased;
+      -moz-osx-font-smoothing:grayscale;
+    }
+
+    body::before{
+      content:"";
+      position:fixed;
+      inset:0;
+      pointer-events:none;
+      background-image:
+        linear-gradient(rgba(92,83,197,.075) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(92,83,197,.075) 1px, transparent 1px);
+      background-size:84px 84px, 84px 84px;
+      mask-image:linear-gradient(180deg, rgba(0,0,0,.72) 0%, rgba(0,0,0,.34) 58%, transparent 100%);
+    }
+
+    body::after{
+      content:"";
+      position:fixed;
+      inset:0;
+      pointer-events:none;
+      background:
+        linear-gradient(115deg, transparent 0 46%, rgba(255,255,255,.4) 46% 47%, transparent 47%),
+        radial-gradient(circle at 21% 31%, rgba(255,154,47,.12) 0 2px, transparent 3px),
+        radial-gradient(circle at 72% 18%, rgba(93,91,224,.1) 0 2px, transparent 3px);
+      background-size:auto, 58px 58px, 74px 74px;
+      opacity:.72;
+    }
+
+    a{ color:var(--cyan); text-decoration:none; }
+    a:hover{ text-decoration:underline; }
+
+    .wrap{
+      width:min(var(--maxw), calc(100% - 36px));
+      margin:0 auto;
+      position:relative;
+      z-index:1;
+    }
+
+    .nav{
+      position:sticky;
+      top:0;
+      z-index:4;
+      backdrop-filter:blur(18px);
+      background:rgba(255, 249, 239, .84);
+      border-bottom:1px solid var(--line);
+    }
+
+    .nav-inner{
+      width:min(var(--maxw), calc(100% - 36px));
+      margin:0 auto;
+      min-height:64px;
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      gap:18px;
+    }
+
+    .brand{
+      display:inline-flex;
+      align-items:center;
+      gap:10px;
+      color:var(--text);
+      font-weight:800;
+      letter-spacing:.02em;
+    }
+
+    .brand-mark{
+      width:30px;
+      height:30px;
+      border:1px solid rgba(255, 177, 85, .28);
+      border-radius:9px;
+      object-fit:cover;
+      display:block;
+      background:#fff;
+      box-shadow:0 6px 18px rgba(92,83,197,.08);
+    }
+
+    .nav-links{
+      display:flex;
+      flex-wrap:wrap;
+      justify-content:flex-end;
+      gap:8px 18px;
+      font-size:14px;
+      color:var(--muted);
+    }
+
+    .nav-links a{ color:var(--muted); }
+    .nav-links a:hover{ color:var(--text); text-decoration:none; }
+
+    .hero{
+      min-height:calc(82vh - 64px);
+      display:flex;
+      justify-content:center;
+      text-align:center;
+      align-items:center;
+      padding:82px 0 64px;
+    }
+
+    .hero-main{
+      max-width:min(1240px, calc(100vw - 36px));
+      margin:0 auto;
+    }
+
+    .eyebrow{
+      display:inline-flex;
+      align-items:center;
+      gap:10px;
+      padding:7px 12px;
+      border:1px solid rgba(255,154,47,.32);
+      border-radius:999px;
+      color:var(--green);
+      background:rgba(255,154,47,.1);
+      font-size:13px;
+      font-weight:700;
+      letter-spacing:.03em;
+      text-transform:uppercase;
+    }
+
+    .eyebrow::before{
+      content:"";
+      width:8px;
+      height:8px;
+      border-radius:50%;
+      background:var(--green);
+      box-shadow:0 0 18px var(--green);
+    }
+
+    h1{
+      margin:20px auto 16px;
+      font-size:clamp(42px, 7vw, 84px);
+      line-height:.96;
+      letter-spacing:0;
+      max-width:900px;
+    }
+
+    .title-sub{
+      color:var(--soft);
+      font-size:clamp(24px, 1.8vw, 32px);
+      font-weight:800;
+      margin:0 0 22px;
+      max-width:none;
+      margin-left:auto;
+      margin-right:auto;
+    }
+
+    @media (min-width: 980px){
+      .title-sub{
+        white-space:nowrap;
+      }
+    }
+
+    .meta{
+      color:var(--muted);
+      font-size:15px;
+      max-width:780px;
+      margin-left:auto;
+      margin-right:auto;
+    }
+
+    .authors{
+      margin:18px 0 8px;
+      color:var(--soft);
+      font-size:18px;
+    }
+
+    .authors a{
+      color:var(--green);
+      font-weight:800;
+    }
+
+    .authors a:hover{
+      color:var(--text);
+      text-decoration:none;
+    }
+
+    .authors strong{ color:var(--text); }
+    .authors sup{
+      font-size:70%;
+      margin-left:2px;
+      vertical-align:super;
+    }
+
+    .affils{
+      color:var(--muted);
+      font-size:17px;
+      max-width:980px;
+      margin:14px auto 0;
+      line-height:1.6;
+    }
+
+    .affils sup{
+      margin-right:4px;
+      font-size:75%;
+      vertical-align:super;
+    }
+
+    .btn-row{
+      display:flex;
+      flex-wrap:wrap;
+      gap:12px;
+      justify-content:center;
+      margin-top:28px;
+    }
+
+    .demo-row{
+      margin-top:18px;
+      display:flex;
+      justify-content:center;
+    }
+
+    .btn{
+      display:inline-flex;
+      align-items:center;
+      justify-content:center;
+      gap:9px;
+      min-height:44px;
+      padding:11px 16px;
+      border-radius:8px;
+      border:1px solid rgba(35,48,71,.88);
+      color:#fff;
+      background:#233047;
+      font-weight:800;
+      box-shadow:0 10px 28px rgba(92,83,197,.08);
+      transition:transform .15s ease, border-color .15s ease, background .15s ease;
+    }
+
+    .btn svg{
+      width:18px;
+      height:18px;
+      flex:0 0 auto;
+    }
+
+    .btn.primary{
+      color:#061017;
+      background:linear-gradient(135deg, #ffb354, #f7d675);
+      border-color:transparent;
+    }
+
+    .btn:hover{
+      transform:translateY(-2px);
+      text-decoration:none;
+      border-color:rgba(35,48,71,.95);
+      background:#172237;
+    }
+
+    .btn.primary:hover{ background:linear-gradient(135deg, #ffc06e, #ffe292); }
+
+    .btn.demo{
+      min-width:260px;
+      min-height:58px;
+      padding:15px 28px;
+      border-radius:999px;
+      font-size:24px;
+      gap:12px;
+      box-shadow:0 18px 42px rgba(255,154,47,.28);
+    }
+
+    .btn.demo svg{
+      width:22px;
+      height:22px;
+    }
+
+    .demo-modal{
+      position:fixed;
+      inset:0;
+      z-index:20;
+      display:none;
+      align-items:center;
+      justify-content:center;
+      padding:24px;
+      background:rgba(35,48,71,.18);
+      backdrop-filter:blur(8px);
+    }
+
+    .demo-modal.show{
+      display:flex;
+    }
+
+    .demo-dialog{
+      width:min(420px, 100%);
+      border:1px solid rgba(255,177,85,.42);
+      border-radius:12px;
+      background:rgba(255,253,248,.96);
+      box-shadow:0 22px 70px rgba(92,83,197,.18);
+      padding:28px;
+      text-align:center;
+    }
+
+    .demo-dialog h3{
+      margin:0 0 10px;
+      color:var(--text);
+      font-size:24px;
+      line-height:1.2;
+    }
+
+    .demo-dialog p{
+      margin:0 0 20px;
+      color:var(--muted);
+    }
+
+    .demo-close{
+      min-width:120px;
+    }
+
+    section{ padding:70px 0; }
+    .section-head{
+      display:flex;
+      flex-direction:column;
+      align-items:center;
+      justify-content:center;
+      gap:14px;
+      margin-bottom:28px;
+      text-align:center;
+    }
+
+    .section-head.centered{
+      display:flex;
+      text-align:center;
+    }
+
+    .section-head h2{
+      display:none;
+    }
+
+    h2{
+      margin:0;
+      font-size:clamp(28px, 4vw, 46px);
+      line-height:1.05;
+      letter-spacing:0;
+    }
+
+    .section-kicker{
+      margin:0;
+      color:var(--green);
+      font-size:clamp(28px, 4vw, 46px);
+      line-height:1.05;
+      font-weight:800;
+      letter-spacing:0;
+      text-transform:uppercase;
+    }
+
+    .section-copy{
+      margin:0;
+      color:var(--muted);
+      max-width:560px;
+      font-size:16px;
+      text-align:center;
+    }
+
+    #experiments-title{
+      white-space:nowrap;
+    }
+
+    .panel{
+      border:1px solid var(--line);
+      background:var(--panel);
+      border-radius:8px;
+      box-shadow:0 18px 48px rgba(92,83,197,.1);
+    }
+
+    .abstract{
+      padding:28px;
+      color:var(--soft);
+      font-size:18px;
+    }
+
+    .abstract-figure{
+      width:100%;
+      display:block;
+      margin:0 0 22px;
+      border:1px solid var(--line2);
+      border-radius:8px;
+      background:#fff;
+    }
+
+    .abstract p{ margin:0; }
+    .abstract strong{ color:var(--green); }
+    .abstract .accent{ color:var(--cyan); }
+
+    .step h3{
+      margin:0 0 10px;
+      font-size:19px;
+      line-height:1.2;
+    }
+
+    .step p{
+      margin:0;
+      color:var(--muted);
+      font-size:15px;
+    }
+
+    .architecture{
+      display:grid;
+      grid-template-columns:1fr;
+      gap:18px;
+    }
+
+    .framework-figure{
+      padding:18px;
+      margin:0 0 18px;
+    }
+
+    .framework-figure img{
+      width:100%;
+      display:block;
+      border-radius:8px;
+      border:1px solid var(--line2);
+      background:#fff;
+    }
+
+    .framework-caption{
+      margin:18px 8px 4px;
+      color:var(--soft);
+      font-size:16px;
+      text-align:left;
+    }
+
+    .framework-caption strong{ color:var(--text); }
+
+    .flow{
+      padding:28px;
+      min-height:100%;
+    }
+
+    .flow h3{
+      margin:0;
+      font-size:24px;
+      line-height:1.2;
+    }
+
+    .flow-lead{
+      max-width:860px;
+      margin:10px 0 0;
+      color:var(--muted);
+      font-size:16px;
+    }
+
+    .flow-map{
+      display:grid;
+      grid-template-columns:repeat(5, minmax(0, 1fr));
+      gap:12px;
+      margin-top:22px;
+    }
+
+    .step{
+      position:relative;
+      padding:18px;
+      border:1px solid var(--line);
+      border-radius:8px;
+      background:rgba(255,255,255,.64);
+      border-top:3px solid var(--green);
+      min-height:190px;
+    }
+
+    .step::before{
+      content:attr(data-step);
+      position:static;
+      width:28px;
+      height:28px;
+      display:grid;
+      place-items:center;
+      border-radius:8px;
+      color:#071018;
+      background:linear-gradient(135deg, #ffb354, #f7d675);
+      font-weight:900;
+      font-size:13px;
+      margin-bottom:14px;
+    }
+
+    .scenario-layout{
+      display:grid;
+      grid-template-columns:.9fr 1.1fr;
+      gap:20px;
+      align-items:stretch;
+    }
+
+    .scenario-bars{
+      padding:26px;
+    }
+
+    .bar-row{ margin:0 0 18px; }
+    .bar-top{
+      display:flex;
+      justify-content:space-between;
+      gap:12px;
+      margin-bottom:8px;
+      color:var(--soft);
+      font-weight:700;
+      font-size:14px;
+    }
+
+    .bar{
+      height:12px;
+      width:96%;
+      overflow:hidden;
+      border-radius:999px;
+      background:rgba(255,255,255,.08);
+    }
+
+    .bar span{
+      display:block;
+      height:100%;
+      border-radius:999px;
+      background:linear-gradient(90deg, var(--cyan), var(--green));
+    }
+
+    .scenario-copy{
+      padding:26px;
+      display:grid;
+      align-content:center;
+      gap:16px;
+    }
+
+    .scenario-copy h3{
+      margin:0;
+      font-size:20px;
+      line-height:1.25;
+    }
+
+    .scenario-copy p{
+      margin:0;
+      color:var(--muted);
+    }
+
+    .scenario-browser{
+      margin:20px 0;
+      padding:22px 72px 48px;
+      position:relative;
+    }
+
+    .scenario-browser-head{
+      margin-bottom:18px;
+    }
+
+    .scenario-browser-head p{
+      margin:0;
+      color:var(--muted);
+      font-size:14px;
+    }
+
+    .scenario-nav{
+      width:42px;
+      height:42px;
+      border:1px solid rgba(35,48,71,.86);
+      border-radius:999px;
+      position:absolute;
+      top:50%;
+      z-index:2;
+      transform:translateY(-50%);
+      display:grid;
+      place-items:center;
+      color:#fff;
+      background:#233047;
+      cursor:pointer;
+      transition:transform .15s ease, background .15s ease;
+    }
+
+    .scenario-nav:hover{
+      transform:translateY(-50%) scale(1.04);
+      background:#172237;
+    }
+
+    .scenario-nav.prev{ left:18px; }
+    .scenario-nav.next{ right:18px; }
+
+    .scenario-nav svg{
+      width:19px;
+      height:19px;
+    }
+
+    .scenario-page-indicator{
+      min-width:54px;
+      position:absolute;
+      left:50%;
+      bottom:18px;
+      transform:translateX(-50%);
+      text-align:center;
+      color:var(--muted);
+      font-weight:800;
+      font-size:14px;
+    }
+
+    .scenario-viewport{
+      overflow:hidden;
+    }
+
+    .scenario-slider{
+      display:flex;
+      transition:transform .38s ease;
+    }
+
+    .scenario-slide{
+      flex:0 0 100%;
+      display:grid;
+      grid-template-columns:repeat(4, 1fr);
+      gap:12px;
+    }
+
+    .scenario-card{
+      min-height:244px;
+      padding:16px;
+      border:1px solid var(--line);
+      border-top:3px solid var(--green);
+      border-radius:8px;
+      background:rgba(255,255,255,.64);
+      display:flex;
+      flex-direction:column;
+      gap:10px;
+    }
+
+    .scenario-card h4{
+      margin:0;
+      color:var(--text);
+      font-size:17px;
+      line-height:1.22;
+    }
+
+    .scenario-card p{
+      margin:0;
+      color:var(--muted);
+      font-size:13.5px;
+      line-height:1.45;
+    }
+
+    .scenario-meta{
+      margin-top:auto;
+      display:grid;
+      gap:6px;
+      color:var(--muted);
+      font-size:12.5px;
+      line-height:1.35;
+    }
+
+    .scenario-meta b{
+      color:var(--text);
+    }
+
+    .experiment-stack{
+      display:grid;
+      gap:18px;
+    }
+
+    .experiment-pair{
+      display:grid;
+      gap:18px;
+      align-items:stretch;
+    }
+
+    .experiment-pair{
+      grid-template-columns:1fr;
+      align-items:start;
+    }
+
+    .experiment-figure{
+      margin:0;
+      padding:16px;
+      overflow:hidden;
+    }
+
+    .experiment-figure h3{
+      margin:0 0 32px;
+      color:var(--text);
+      font-size:24px;
+      line-height:1.2;
+      text-align:center;
+    }
+
+    .figure-frame{
+      min-height:220px;
+      display:grid;
+      place-items:center;
+      border-radius:8px;
+      background:#fff;
+      overflow:hidden;
+    }
+
+    .figure-frame.compact{
+      min-height:260px;
+    }
+
+    .experiment-figure img{
+      width:100%;
+      max-height:320px;
+      display:block;
+      object-fit:contain;
+    }
+
+    .experiment-figure.wide img{
+      max-height:370px;
+    }
+
+    .experiment-figure.wide .experiment-note{
+      margin-top:18px;
+    }
+
+    .intervention-grid{
+      width:100%;
+      display:grid;
+      grid-template-columns:repeat(4, 1fr);
+      gap:8px;
+      padding:8px;
+    }
+
+    .intervention-grid img{
+      height:220px;
+      border-radius:6px;
+      background:#fff;
+      object-fit:contain;
+    }
+
+    .experiment-figure figcaption{
+      margin:12px 4px 0;
+      color:var(--muted);
+      font-size:13.5px;
+      line-height:1.5;
+    }
+
+    .experiment-figure figcaption b{
+      color:var(--text);
+    }
+
+    .experiment-table{
+      padding:18px;
+    }
+
+    .experiment-card-head{
+      margin:0 0 14px;
+    }
+
+    .heatmap-card .experiment-card-head{
+      margin-bottom:28px;
+    }
+
+    .experiment-card-title{
+      margin:0;
+      color:var(--text);
+      font-size:24px;
+      line-height:1.2;
+      text-align:center;
+    }
+
+    .experiment-note{
+      margin:12px auto 0;
+      max-width:860px;
+      color:var(--muted);
+      font-size:14px;
+      line-height:1.5;
+      text-align:center;
+    }
+
+    .heatmap-card{
+      padding:18px;
+    }
+
+    .heatmap-wrap{
+      overflow-x:auto;
+    }
+
+    .heatmap{
+      width:min(100%, 860px);
+      min-width:700px;
+      margin:0 auto;
+      display:grid;
+      grid-template-columns:100px 1fr 58px;
+      grid-template-rows:repeat(6, 48px) 42px;
+      column-gap:10px;
+      color:#10213a;
+      font-size:13px;
+      font-weight:800;
+    }
+
+    .heatmap-card .experiment-note{
+      margin-top:28px;
+    }
+
+    .heatmap-y{
+      grid-column:1;
+      grid-row:1 / span 6;
+      display:grid;
+      grid-template-rows:repeat(6, 48px);
+      gap:2px;
+    }
+
+    .heatmap-label{
+      display:grid;
+      place-items:center end;
+      padding-right:10px;
+      color:var(--text);
+      text-align:right;
+    }
+
+    .heatmap-matrix{
+      grid-column:2;
+      grid-row:1 / span 6;
+      display:grid;
+      grid-template-columns:repeat(6, 1fr);
+      grid-template-rows:repeat(6, 48px);
+      gap:2px;
+      border-radius:6px;
+      overflow:hidden;
+    }
+
+    .heatmap-xaxis{
+      grid-column:2;
+      grid-row:7;
+      display:grid;
+      grid-template-columns:repeat(6, 1fr);
+      gap:2px;
+      padding-top:8px;
+    }
+
+    .heatmap-x{
+      display:grid;
+      place-items:start center;
+      color:var(--text);
+      text-align:center;
+      line-height:1.12;
+      font-size:12.5px;
+    }
+
+    .heat-cell{
+      display:grid;
+      place-items:center;
+    }
+
+    .heat-017{ background:#fff8eb; }
+    .heat-027{ background:#fff0d8; }
+    .heat-029{ background:#ffebcc; }
+    .heat-030{ background:#ffe6c0; }
+    .heat-035{ background:#ffd9a7; }
+    .heat-038{ background:#ffcd91; }
+    .heat-040{ background:#ffc27f; }
+    .heat-042{ background:#f8b978; }
+    .heat-043{ background:#f1af78; }
+    .heat-046{ background:#e4a17e; }
+    .heat-050{ background:#cf948b; }
+    .heat-054{ background:#b985a0; color:#fff; }
+    .heat-057{ background:#a478b2; color:#fff; }
+    .heat-058{ background:#9c73ba; color:#fff; }
+    .heat-060{ background:#916dc4; color:#fff; }
+    .heat-062{ background:#8567ce; color:#fff; }
+    .heat-065{ background:#7962d7; color:#fff; }
+    .heat-070{ background:#695be0; color:#fff; }
+    .heat-071{ background:#6155d6; color:#fff; }
+    .heat-073{ background:#584ecb; color:#fff; }
+    .heat-083{ background:#423aa3; color:#fff; }
+
+    .heat-scale{
+      grid-column:3;
+      grid-row:1 / span 6;
+      width:18px;
+      justify-self:start;
+      border:1px solid rgba(35,48,71,.25);
+      background:linear-gradient(180deg, #423aa3 0%, #695be0 34%, #cf948b 58%, #ffc27f 78%, #fff8eb 100%);
+    }
+
+    .heat-scale-labels{
+      grid-column:3;
+      grid-row:1 / span 6;
+      display:flex;
+      flex-direction:column;
+      justify-content:space-between;
+      padding-left:24px;
+      color:var(--text);
+      font-weight:700;
+    }
+
+    .results{
+      overflow-x:auto;
+      padding:18px 72px;
+    }
+
+    table{
+      width:100%;
+      min-width:720px;
+      border-collapse:collapse;
+      color:var(--soft);
+      font-size:14px;
+    }
+
+    th, td{
+      padding:12px;
+      border-bottom:1px solid var(--line);
+      text-align:left;
+    }
+
+    thead th{
+      color:var(--green);
+      font-size:13px;
+      text-transform:uppercase;
+      letter-spacing:.05em;
+      background:rgba(255,255,255,.55);
+    }
+
+    tbody tr:hover td{ background:rgba(95,231,255,.035); }
+    tbody td:first-child{ font-weight:800; }
+    td strong{ color:var(--cyan); }
+
+    .gallery{
+      display:grid;
+      grid-template-columns:repeat(4, 1fr);
+      gap:12px;
+    }
+
+    .gallery figure{
+      margin:0;
+      border:1px solid var(--line);
+      border-radius:8px;
+      overflow:hidden;
+      background:var(--panel);
+      transition:transform .18s ease, box-shadow .18s ease;
+      transform-origin:center;
+    }
+
+    .gallery figure:hover{
+      transform:scale(1.025);
+      box-shadow:0 22px 58px rgba(92,83,197,.16);
+    }
+
+    .gallery img{
+      width:100%;
+      aspect-ratio:1;
+      object-fit:cover;
+      display:block;
+      cursor:zoom-in;
+    }
+
+    .gallery figcaption{
+      padding:12px;
+      color:var(--muted);
+      font-size:13px;
+    }
+
+    .gallery figcaption b{
+      display:block;
+      margin-bottom:6px;
+      color:var(--text);
+      font-size:15px;
+    }
+
+    .gallery-note{
+      max-width:820px;
+      margin:18px auto 0;
+      text-align:center;
+    }
+
+    .branch-modal{
+      position:fixed;
+      inset:0;
+      z-index:22;
+      display:none;
+      align-items:center;
+      justify-content:center;
+      padding:28px;
+      background:rgba(35,48,71,.22);
+      backdrop-filter:blur(10px);
+    }
+
+    .branch-modal.show{
+      display:flex;
+    }
+
+    .branch-dialog{
+      width:min(980px, 100%);
+      max-height:calc(100vh - 56px);
+      overflow:auto;
+      border:1px solid var(--line);
+      border-radius:10px;
+      background:rgba(255,253,248,.98);
+      box-shadow:0 28px 82px rgba(92,83,197,.22);
+      padding:18px;
+    }
+
+    .branch-preview{
+      position:relative;
+    }
+
+    .branch-dialog img{
+      width:100%;
+      max-height:72vh;
+      object-fit:contain;
+      display:block;
+      border-radius:8px;
+      background:#fff;
+    }
+
+    .branch-dialog h3{
+      margin:16px 4px 8px;
+      color:var(--text);
+      font-size:24px;
+      line-height:1.2;
+      text-align:center;
+    }
+
+    .branch-dialog p{
+      margin:0 auto;
+      max-width:760px;
+      color:var(--muted);
+      text-align:center;
+    }
+
+    .branch-close{
+      width:40px;
+      height:40px;
+      margin:0 0 10px auto;
+      border:1px solid rgba(35,48,71,.18);
+      border-radius:999px;
+      display:grid;
+      place-items:center;
+      color:var(--text);
+      background:#fff;
+      cursor:pointer;
+      font-size:24px;
+      line-height:1;
+    }
+
+    .branch-nav{
+      width:44px;
+      height:44px;
+      border:1px solid rgba(35,48,71,.86);
+      border-radius:999px;
+      position:absolute;
+      top:50%;
+      z-index:2;
+      display:grid;
+      place-items:center;
+      color:#fff;
+      background:#233047;
+      cursor:pointer;
+      transform:translateY(-50%);
+      transition:transform .15s ease, background .15s ease;
+    }
+
+    .branch-nav:hover{
+      transform:translateY(-50%) scale(1.04);
+      background:#172237;
+    }
+
+    .branch-nav.prev{ left:14px; }
+    .branch-nav.next{ right:14px; }
+
+    .branch-nav svg{
+      width:20px;
+      height:20px;
+    }
+
+    .citation{
+      position:relative;
+      padding:22px;
+      overflow-x:auto;
+    }
+
+    .copy-citation{
+      position:absolute;
+      top:14px;
+      right:14px;
+      min-height:34px;
+      padding:7px 12px;
+      border:1px solid rgba(35,48,71,.18);
+      border-radius:8px;
+      color:var(--text);
+      background:#fff;
+      font-weight:800;
+      cursor:pointer;
+      transition:transform .15s ease, background .15s ease, color .15s ease;
+    }
+
+    .copy-citation:hover{
+      transform:translateY(-1px);
+      color:#061017;
+      background:linear-gradient(135deg, #ffb354, #f7d675);
+    }
+
+    pre{
+      margin:0;
+      padding-right:88px;
+      color:var(--soft);
+      font-size:13px;
+      line-height:1.5;
+      font-family:ui-monospace,SFMono-Regular,Menlo,Monaco,Consolas,"Liberation Mono","Courier New",monospace;
+    }
+
+    footer{
+      padding:46px 0 70px;
+      color:var(--muted);
+      text-align:center;
+      font-size:13px;
+    }
+
+    @media (max-width: 960px){
+      .hero,
+      .architecture,
+      .scenario-layout{
+        grid-template-columns:1fr;
+      }
+
+      .hero{ padding-top:54px; }
+      .flow-map{
+        grid-template-columns:repeat(2, 1fr);
+      }
+      .scenario-slide{
+        grid-template-columns:repeat(2, 1fr);
+      }
+      .experiment-pair,
+      .gallery{
+        grid-template-columns:repeat(2, 1fr);
+      }
+
+      .section-head{
+        display:block;
+      }
+
+      .section-copy{ margin-top:12px; }
+    }
+
+    @media (max-width: 640px){
+      .section-head.centered h2{
+        white-space:normal;
+      }
+
+      #experiments-title{
+        white-space:normal;
+      }
+
+      .nav-inner{
+        align-items:flex-start;
+        flex-direction:column;
+        padding:14px 0;
+      }
+
+      .nav-links{ justify-content:flex-start; }
+      .hero{ min-height:auto; }
+      .scenario-browser{
+        padding:18px 54px 46px;
+      }
+
+      .scenario-nav{
+        width:38px;
+        height:38px;
+      }
+
+      .scenario-nav.prev{ left:10px; }
+      .scenario-nav.next{ right:10px; }
+
+      .flow-map,
+      .scenario-slide,
+      .experiment-pair,
+      .gallery{
+        grid-template-columns:1fr;
+      }
+
+      .intervention-grid{
+        grid-template-columns:repeat(4, minmax(140px, 1fr));
+        overflow-x:auto;
+      }
+
+      .experiment-card-head{
+        display:block;
+      }
+
+      .experiment-card-head p{
+        margin-top:8px;
+      }
+
+      .results{
+        padding:18px;
+      }
+
+      section{ padding:52px 0; }
+    }
+  </style>
+</head>
+
+<body>
+  <header class="nav">
+    <div class="nav-inner">
+      <a class="brand" href="#top" aria-label="EduMirror home">
+        <img class="brand-mark" src="assets/icon.png" alt="" />
+        <span>EduMirror</span>
+      </a>
+      <nav class="nav-links" aria-label="Page navigation">
+        <a href="#abstract">Abstract</a>
+        <a href="#architecture">Architecture</a>
+        <a href="#scenarios">Scenarios</a>
+        <a href="#experiments">Experiments</a>
+        <a href="#citation">Citation</a>
+      </nav>
+    </div>
+  </header>
+
+  <main id="top" class="wrap">
+    <section class="hero" aria-labelledby="title">
+      <div class="hero-main">
+        <span class="eyebrow">ICML 2026 &middot; Educational AI Simulation</span>
+        <h1 id="title">EduMirror</h1>
+        <p class="title-sub">Modeling Educational Social Dynamics with Value-driven Multi-agent Simulation</p>
+        <p class="authors">
+          <a href="https://openreview.net/profile?id=~Jingzhe_Lin1" target="_blank" rel="noopener">Jingzhe Lin</a>*<sup>1</sup>,
+          <a href="https://openreview.net/profile?id=~Hengbin_Yu1" target="_blank" rel="noopener">Hengbin Yu</a>*<sup>2</sup>,
+          <a href="https://openreview.net/profile?id=~Yongdan_Zeng1" target="_blank" rel="noopener">Yongdan Zeng</a>*<sup>1,3</sup>,
+          <a href="https://fangweizhong.xyz/" target="_blank" rel="noopener">Fangwei Zhong</a><sup>1,&#9993;</sup>
+        </p>
+        <div class="affils">
+          <div><sup>1</sup> School of Artificial Intelligence, Beijing Normal University, Beijing, China.</div>
+          <div><sup>2</sup> School of Systems Science, Beijing Normal University, Beijing, China.</div>
+          <div><sup>3</sup> Information Hub, The Hong Kong University of Science and Technology (Guangzhou), Guangzhou, China.</div>
+          <div><sup>*</sup> Equal contribution. <sup>&#9993;</sup> Corresponding author.</div>
+        </div>
+        <div class="btn-row">
+          <a class="btn" href="assets/EduMirror.pdf" target="_blank" rel="noopener">
+            <svg viewBox="0 0 24 24" fill="none" aria-hidden="true">
+              <path d="M7 3h7l4 4v14H7a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2Z" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"/>
+              <path d="M14 3v5h5M8 13h8M8 17h6" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+            Open Paper
+          </a>
+          <a class="btn" href="#architecture">
+            <svg viewBox="0 0 24 24" fill="none" aria-hidden="true">
+              <path d="M12 3v4M12 17v4M5 12H3m18 0h-2" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/>
+              <rect x="8" y="7" width="8" height="10" rx="2" stroke="currentColor" stroke-width="1.8"/>
+              <path d="M6 12h2m8 0h2" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/>
+            </svg>
+            View Framework
+          </a>
+          <a class="btn" href="#experiments">
+            <svg viewBox="0 0 24 24" fill="none" aria-hidden="true">
+              <path d="M4 19V5M4 19h16" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/>
+              <path d="M8 16v-4M12 16V8M16 16v-6" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/>
+            </svg>
+            See Results
+          </a>
+        </div>
+        <div class="demo-row">
+          <button class="btn primary demo" type="button" id="liveDemoBtn">
+            <svg viewBox="0 0 24 24" fill="none" aria-hidden="true">
+              <path d="M9 7.5v9l7-4.5-7-4.5Z" fill="currentColor"/>
+              <path d="M12 22a10 10 0 1 0 0-20 10 10 0 0 0 0 20Z" stroke="currentColor" stroke-width="1.8"/>
+            </svg>
+            Live Demo
+          </button>
+        </div>
+      </div>
+    </section>
+
+    <section id="abstract" aria-labelledby="abstract-title">
+      <div class="section-head">
+        <div>
+          <p class="section-kicker">Abstract</p>
+          <h2 id="abstract-title">A safer laboratory for educational social dynamics.</h2>
+        </div>
+      </div>
+      <div class="panel abstract">
+        <img class="abstract-figure" src="assets/intro_v2.png" alt="EduMirror overview of educational scenarios and intervention workflow" />
+        <p>
+          <strong>EduMirror</strong> is a multi-agent simulator for studying
+          <strong class="accent">educational social dynamics</strong> when real-world controlled experiments
+          are ethically difficult and observational studies lack causal power. It combines a configurable
+          library of education-oriented agents with <strong>value-driven behavior</strong> grounded in social
+          value and intrinsic motivation. A <strong class="accent">dual-track measurement protocol</strong>
+          uses LLMs to quantify both overt actions and latent psychological states, enabling structured
+          in-silico research. Case studies on school bullying and group cooperation show that EduMirror can
+          generate theory-aligned, measurable social phenomena for hypothesis testing in education.
+        </p>
+      </div>
+    </section>
+
+    <section id="architecture" aria-labelledby="architecture-title">
+      <div class="section-head centered">
+        <div>
+          <p class="section-kicker">Architecture</p>
+          <h2 id="architecture-title">From theory to simulation traces.</h2>
+        </div>
+      </div>
+      <figure class="panel framework-figure">
+        <img src="assets/FlowChart.png" alt="EduMirror framework flowchart" />
+        <figcaption class="framework-caption">
+          <strong>EduMirror follows a closed experimental workflow.</strong> Researchers first construct
+          theory-grounded educational scenarios by integrating domain theory, defining context, profiling
+          roles, and configuring measurement metrics. These settings initialize the Concordia-based simulation
+          engine, where the Game Master manages scene setting, narration, rule enforcement, and time. Agents
+          act through a value-driven cognitive architecture: profiles, traits, goals, memories, theory-of-mind,
+          psychological needs, and social value orientation jointly guide the action planner to generate,
+          evaluate, select, and reflect on behaviors. The resulting interaction traces flow into user toolkits,
+          where LLM Raters and LLM Surveyors quantify explicit behaviors and implicit states, while intervention
+          tools create parallel timelines for counterfactual comparison and visualization.
+        </figcaption>
+      </figure>
+      <div class="architecture">
+        <article class="panel flow">
+          <h3>Computable scenario construction</h3>
+          <p class="flow-lead">
+            EduMirror turns an abstract educational phenomenon into a measurable simulation package before
+            running agents. The process keeps each scenario tied to theory, roles, metrics, and intervention logic.
+          </p>
+          <div class="flow-map">
+            <div class="step" data-step="1">
+              <h3>Select grounding theory</h3>
+              <p>Choose theories that explain the target phenomenon, such as social comparison, family stress, or social anxiety.</p>
+            </div>
+            <div class="step" data-step="2">
+              <h3>Identify constructs</h3>
+              <p>Break the theory into measurable concepts, such as self-esteem, belonging, pressure, anxiety, or competition.</p>
+            </div>
+            <div class="step" data-step="3">
+              <h3>Profile agents</h3>
+              <p>Map constructs into roles, traits, goals, formative memories, and initial psychological or social-value states.</p>
+            </div>
+            <div class="step" data-step="4">
+              <h3>Configure metrics</h3>
+              <p>Operationalize outcomes with behavior rubrics and validated-scale-inspired survey probes for internal states.</p>
+            </div>
+            <div class="step" data-step="5">
+              <h3>Run comparisons</h3>
+              <p>Generate matched timelines, apply interventions, and compare explicit behavior with latent psychological change.</p>
+            </div>
+          </div>
+        </article>
+      </div>
+
+    </section>
+
+    <section id="scenarios" aria-labelledby="scenario-title">
+      <div class="section-head">
+        <div>
+          <p class="section-kicker">Scenario Library</p>
+          <h2 id="scenario-title">A theory-grounded scenario library.</h2>
+        </div>
+      </div>
+      <div class="scenario-layout">
+        <article class="panel scenario-bars" aria-label="Distribution of EduMirror scenarios">
+          <div class="bar-row">
+            <div class="bar-top"><span>Peer &amp; Group Dynamics</span><span>7 &middot; 35%</span></div>
+            <div class="bar"><span style="width:100%"></span></div>
+          </div>
+          <div class="bar-row">
+            <div class="bar-top"><span>Individual Social Cognition</span><span>5 &middot; 25%</span></div>
+            <div class="bar"><span style="width:71%"></span></div>
+          </div>
+          <div class="bar-row">
+            <div class="bar-top"><span>Classroom Culture</span><span>3 &middot; 15%</span></div>
+            <div class="bar"><span style="width:43%"></span></div>
+          </div>
+          <div class="bar-row" style="margin-bottom:0;">
+            <div class="bar-top"><span>Home-School Dynamics</span><span>5 &middot; 25%</span></div>
+            <div class="bar"><span style="width:71%"></span></div>
+          </div>
+        </article>
+
+        <article class="panel scenario-copy">
+          <h3>Each scenario is a computable research package.</h3>
+          <p>
+            EduMirror contains 20 pre-designed educational scenarios. In the paper, each scenario is specified
+            by its social phenomenon, participating roles, number of agents, grounding theory, and measurement
+            protocol. This lets the same simulation pipeline support both descriptive observation and controlled
+            intervention experiments.
+          </p>
+        </article>
+      </div>
+      <div class="panel scenario-browser" aria-label="Scenario library browser">
+        <div class="scenario-browser-head">
+          <p>Browse the full 20-scenario library in compact pages. Each card keeps the table's phenomenon, roles, theory, and measurement protocol.</p>
+        </div>
+        <div class="scenario-viewport" aria-live="polite">
+          <div class="scenario-slider" id="scenarioSlider"></div>
+        </div>
+        <button class="scenario-nav prev" type="button" id="scenarioPrev" aria-label="Previous scenario page">
+          <svg viewBox="0 0 24 24" fill="none" aria-hidden="true">
+            <path d="M15 18 9 12l6-6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+          </svg>
+        </button>
+        <span class="scenario-page-indicator" id="scenarioPageIndicator">1 / 5</span>
+        <button class="scenario-nav next" type="button" id="scenarioNext" aria-label="Next scenario page">
+          <svg viewBox="0 0 24 24" fill="none" aria-hidden="true">
+            <path d="m9 18 6-6-6-6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+          </svg>
+        </button>
+      </div>
+    </section>
+
+    <section id="experiments" aria-labelledby="experiments-title">
+      <div class="section-head">
+        <div>
+          <p class="section-kicker">Experiments</p>
+          <h2 id="experiments-title">Evidence from realism, scale, and intervention tests.</h2>
+        </div>
+      </div>
+
+      <div class="experiment-stack">
+        <figure class="panel heatmap-card experiment-figure">
+          <div class="experiment-card-head">
+            <h3 class="experiment-card-title">Scenario-wide win-rate comparison</h3>
+          </div>
+          <div class="heatmap-wrap">
+            <div class="heatmap" role="img" aria-label="Pairwise win-rate heatmap comparing EduMirror with baseline agent frameworks">
+              <div class="heatmap-y" aria-hidden="true">
+                <div class="heatmap-label">Ours</div>
+                <div class="heatmap-label">D2A</div>
+                <div class="heatmap-label">LLMob</div>
+                <div class="heatmap-label">ReAct</div>
+                <div class="heatmap-label">BabyAGI</div>
+                <div class="heatmap-label">JAG<br/>Concordia</div>
+              </div>
+              <div class="heatmap-matrix">
+                <div class="heat-cell heat-050">0.50</div>
+                <div class="heat-cell heat-030">0.30</div>
+                <div class="heat-cell heat-030">0.30</div>
+                <div class="heat-cell heat-027">0.27</div>
+                <div class="heat-cell heat-017">0.17</div>
+                <div class="heat-cell heat-027">0.27</div>
+                <div class="heat-cell heat-070">0.70</div>
+                <div class="heat-cell heat-050">0.50</div>
+                <div class="heat-cell heat-054">0.54</div>
+                <div class="heat-cell heat-043">0.43</div>
+                <div class="heat-cell heat-035">0.35</div>
+                <div class="heat-cell heat-054">0.54</div>
+                <div class="heat-cell heat-070">0.70</div>
+                <div class="heat-cell heat-046">0.46</div>
+                <div class="heat-cell heat-050">0.50</div>
+                <div class="heat-cell heat-042">0.42</div>
+                <div class="heat-cell heat-030">0.30</div>
+                <div class="heat-cell heat-040">0.40</div>
+                <div class="heat-cell heat-073">0.73</div>
+                <div class="heat-cell heat-057">0.57</div>
+                <div class="heat-cell heat-058">0.58</div>
+                <div class="heat-cell heat-050">0.50</div>
+                <div class="heat-cell heat-038">0.38</div>
+                <div class="heat-cell heat-054">0.54</div>
+                <div class="heat-cell heat-083">0.83</div>
+                <div class="heat-cell heat-065">0.65</div>
+                <div class="heat-cell heat-070">0.70</div>
+                <div class="heat-cell heat-062">0.62</div>
+                <div class="heat-cell heat-050">0.50</div>
+                <div class="heat-cell heat-071">0.71</div>
+                <div class="heat-cell heat-073">0.73</div>
+                <div class="heat-cell heat-046">0.46</div>
+                <div class="heat-cell heat-060">0.60</div>
+                <div class="heat-cell heat-046">0.46</div>
+                <div class="heat-cell heat-029">0.29</div>
+                <div class="heat-cell heat-050">0.50</div>
+              </div>
+              <div class="heat-scale" aria-hidden="true"></div>
+              <div class="heat-scale-labels" aria-hidden="true">
+                <span>1.0</span><span>0.8</span><span>0.6</span><span>0.4</span><span>0.2</span><span>0.0</span>
+              </div>
+              <div class="heatmap-xaxis" aria-hidden="true">
+                <div class="heatmap-x">Ours</div>
+                <div class="heatmap-x">D2A</div>
+                <div class="heatmap-x">LLMob</div>
+                <div class="heatmap-x">ReAct</div>
+                <div class="heatmap-x">BabyAGI</div>
+                <div class="heatmap-x">JAG<br/>Concordia</div>
+              </div>
+            </div>
+          </div>
+          <p class="experiment-note">
+            The heatmap summarizes pairwise post-hoc evaluations across seventeen educational scenarios: six
+            representative settings, eight bullying simulations, and three social-interaction simulations. Each
+            cell reports the column model's win rate against the row model, offering a compact system-level view
+            of relative realism, contextual appropriateness, and human-likeness.
+          </p>
+        </figure>
+
+        <article class="panel experiment-table">
+          <div class="experiment-card-head">
+            <h3 class="experiment-card-title">Scalability under larger groups</h3>
+          </div>
+          <div class="results">
+            <table aria-label="Scalability evaluation in kindergarten scenario">
+              <thead>
+                <tr>
+                  <th>Agents</th>
+                  <th>EduMirror</th>
+                  <th>LLMob</th>
+                  <th>BabyAGI</th>
+                  <th>D2A</th>
+                  <th>ReAct</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr><td>5</td><td><strong>4.80</strong></td><td>4.25</td><td>4.10</td><td>3.35</td><td>2.35</td></tr>
+                <tr><td>15</td><td><strong>4.18</strong></td><td>3.60</td><td>3.57</td><td>3.53</td><td>2.93</td></tr>
+                <tr><td>30</td><td><strong>4.03</strong></td><td>3.83</td><td>3.86</td><td>3.12</td><td>2.41</td></tr>
+              </tbody>
+            </table>
+          </div>
+          <p class="experiment-note">
+            The kindergarten scalability study increases the group from 5 to 15 and 30 agents, then averages
+            four rubric dimensions: naturalness, coherence, plausibility, and developmental typicality. EduMirror
+            remains the top method at every group size, suggesting that the simulator can preserve age-appropriate
+            classroom dynamics even as simultaneous child-agent interactions become denser.
+          </p>
+        </article>
+
+        <div class="experiment-pair">
+          <figure class="panel experiment-figure wide">
+            <h3>Psychological trajectories in bullying simulation</h3>
+            <div class="figure-frame">
+              <img src="assets/Figure5.png" alt="Psychological need trajectories in the dormitory bullying scenario under different initial states" />
+            </div>
+            <p class="experiment-note">
+              The dormitory bullying case tracks five latent dimensions on a 0-10 scale across simulated time:
+              Safety, Social Belonging, Esteem, Meaning &amp; Growth, and Psychological Health. The comparison
+              shows that healthier initial values make Alice more resilient, while vulnerable initial values
+              accelerate deterioration under repeated exclusion, rumor-spreading, and confrontation.
+            </p>
+          </figure>
+
+          <figure class="panel experiment-figure">
+            <h3>Intervention outcomes by strategy</h3>
+            <div class="figure-frame compact">
+            <div class="intervention-grid" aria-label="Intervention strategy boxplots">
+              <img src="assets/Figure6a.png" alt="Neglectful intervention boxplots across psychological needs" />
+              <img src="assets/Figure6b.png" alt="Authoritative-punitive intervention boxplots across psychological needs" />
+              <img src="assets/Figure6c.png" alt="Supportive-individual intervention boxplots across psychological needs" />
+              <img src="assets/Figure6d.png" alt="Supportive-cooperative intervention boxplots across psychological needs" />
+            </div>
+            </div>
+            <p class="experiment-note">
+              The intervention study creates matched bullying branches with different teacher goals: neglectful
+              response, authoritative-punitive discipline, supportive-individual care, and supportive-cooperative
+              class action. The distributions show a progression in effectiveness, with cooperative support
+              improving the broadest set of psychological needs.
+            </p>
+          </figure>
+        </div>
+      </div>
+    </section>
+
+    <section aria-labelledby="gallery-title">
+      <div class="section-head">
+        <div>
+          <p class="section-kicker">Counterfactual Outcomes</p>
+          <h2 id="gallery-title">Intervention branches in the family financial strain scenario.</h2>
+        </div>
+      </div>
+      <div class="gallery">
+        <figure>
+          <img src="assets/examples/Baseline.png" alt="Baseline no-intervention scenario" />
+          <figcaption>
+            <b>(a) Baseline: no intervention</b>
+            Without support, Alex withdraws. The misunderstanding escalates into conflict and isolation.
+          </figcaption>
+        </figure>
+        <figure>
+          <img src="assets/examples/TeacherTalk.png" alt="Teacher talk scenario" />
+          <figcaption>
+            <b>(b) Teacher-student talk</b>
+            Mr. Davis reframes Alex's situation and values, helping peers respond with support.
+          </figcaption>
+        </figure>
+        <figure>
+          <img src="assets/examples/ParentCall.png" alt="Parent call scenario" />
+          <figcaption>
+            <b>(c) Parent call</b>
+            Emotional reassurance gives Alex confidence to be honest and plan local activities with friends.
+          </figcaption>
+        </figure>
+        <figure>
+          <img src="assets/examples/ClassMeeting.png" alt="Class meeting scenario" />
+          <figcaption>
+            <b>(d) Class meeting</b>
+            Class norms shift through collective discussion, turning an expensive trip into a cheaper group option.
+          </figcaption>
+        </figure>
+      </div>
+      <p class="section-copy gallery-note">
+        EduMirror turns one family financial strain scenario into parallel intervention timelines, making
+        alternative causal pathways inspectable as qualitative narratives.
+      </p>
+    </section>
+
+    <section id="citation" aria-labelledby="citation-title">
+      <div class="section-head">
+        <div>
+          <p class="section-kicker">Citation</p>
+          <h2 id="citation-title">BibTeX</h2>
+        </div>
+      </div>
+      <div class="panel citation">
+        <button class="copy-citation" type="button" id="copyCitationBtn">Copy</button>
+        <pre><code id="citationCode">@inproceedings{edumirror2026,
+  title     = {EduMirror: Modeling Educational Social Dynamics with Value-driven Multi-agent Simulation},
+  author    = {Lin, Jingzhe and Yu, Hengbin and Zeng, Yongdan and Zhong, Fangwei},
+  booktitle = {Proceedings of the 43rd International Conference on Machine Learning},
+  year      = {2026},
+  address   = {Seoul, South Korea},
+  publisher = {PMLR}
+}</code></pre>
+      </div>
+    </section>
+  </main>
+
+  <footer>
+    <div class="wrap">&copy; <span id="year"></span> EduMirror Project Page</div>
+  </footer>
+
+  <div class="demo-modal" id="demoModal" role="dialog" aria-modal="true" aria-labelledby="demoModalTitle" aria-hidden="true">
+    <div class="demo-dialog">
+      <h3 id="demoModalTitle">Live Demo Coming Soon</h3>
+      <button class="btn primary demo-close" type="button" id="demoCloseBtn">Got it</button>
+    </div>
+  </div>
+
+  <div class="branch-modal" id="branchModal" role="dialog" aria-modal="true" aria-labelledby="branchModalTitle" aria-hidden="true">
+    <div class="branch-dialog">
+      <button class="branch-close" type="button" id="branchCloseBtn" aria-label="Close enlarged card">&times;</button>
+      <div class="branch-preview">
+        <button class="branch-nav prev" type="button" id="branchPrevBtn" aria-label="Previous counterfactual branch">
+          <svg viewBox="0 0 24 24" fill="none" aria-hidden="true">
+            <path d="M15 18 9 12l6-6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+          </svg>
+        </button>
+        <img id="branchModalImage" src="" alt="" />
+        <button class="branch-nav next" type="button" id="branchNextBtn" aria-label="Next counterfactual branch">
+          <svg viewBox="0 0 24 24" fill="none" aria-hidden="true">
+            <path d="m9 18 6-6-6-6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+          </svg>
+        </button>
+      </div>
+      <h3 id="branchModalTitle"></h3>
+      <p id="branchModalText"></p>
+    </div>
+  </div>
+
+  <script>
+    document.getElementById("year").textContent = new Date().getFullYear();
+
+    const scenarioPages = [
+      [
+        {
+          name: "School Bullying",
+          desc: "Victim needs evolve under bullying while teacher interventions are compared.",
+          roles: "Student, Teacher - 5 agents",
+          theory: "Maslow's Hierarchy of Needs; PERMA",
+          measures: "RSES; Psychological Need Scales"
+        },
+        {
+          name: "Social Interaction and Competition",
+          desc: "Cooperation and competition dynamics reveal how SVO shapes behavior.",
+          roles: "Student, Teacher - 4 agents",
+          theory: "Social Value Orientation",
+          measures: "SVO Slider; Behavioral Metrics"
+        },
+        {
+          name: "Celebrity Worship and Identity Formation",
+          desc: "Celebrity worship is used to study adolescent identity formation.",
+          roles: "Student, Parent, Teacher - 4 agents",
+          theory: "Identity Status; Parasocial Interaction",
+          measures: "CAS; RSES"
+        },
+        {
+          name: "Collaborative IEP Meeting",
+          desc: "Parents and teachers collaborate on an Individualized Education Program.",
+          roles: "Student, Parent, Teacher - 4 agents",
+          theory: "Ecological Systems Theory",
+          measures: "PSSM; FSPS"
+        }
+      ],
+      [
+        {
+          name: "Enforcing Discipline Policy",
+          desc: "Restorative and punitive responses are compared after misconduct.",
+          roles: "Student, Parent, Teacher - 4 agents",
+          theory: "Restorative Justice; Operant Conditioning",
+          measures: "PJS; SCS"
+        },
+        {
+          name: "Family Econ Pressure Social Decision",
+          desc: "Parental academic pressure and adolescent burnout are simulated.",
+          roles: "Student, Parent, Teacher - 5 agents",
+          theory: "Self-Determination Theory",
+          measures: "RSES; INCOM"
+        },
+        {
+          name: "Friendship Formation and Dissolution",
+          desc: "Friendship change is modeled through similarity, proximity, and conflict.",
+          roles: "Student, Teacher - 4 agents",
+          theory: "Social Penetration; Equity Theory",
+          measures: "FQS; SAS-A"
+        },
+        {
+          name: "Helicopter Parent and Teacher Autonomy",
+          desc: "Parent-adolescent autonomy conflict is tested with collaborative problem solving.",
+          roles: "Student, Parent, Teacher - 3 agents",
+          theory: "Attachment; Self-Determination Theory",
+          measures: "BPNS-G; GSE"
+        }
+      ],
+      [
+        {
+          name: "Materialism Consumption Decision",
+          desc: "Goal-setting strategies are compared for motivation and persistence.",
+          roles: "Student, Teacher - 4 agents",
+          theory: "Goal-Setting; Achievement Goal Theory",
+          measures: "MVS-Short; RSES"
+        },
+        {
+          name: "Navigating Discrimination",
+          desc: "In-group favoritism and out-group prejudice are simulated in school.",
+          roles: "Student, Teacher - 4 agents",
+          theory: "Social Identity; Realistic Conflict Theory",
+          measures: "GEDS; SOBI"
+        },
+        {
+          name: "Navigating Romantic Interests and Rejection",
+          desc: "Romantic rejection is used to explore emotion and self-esteem effects.",
+          roles: "Student, Teacher - 4 agents",
+          theory: "Need-to-Belong; Cognitive Appraisal",
+          measures: "RS-Q; PANAS"
+        },
+        {
+          name: "Organizing School Event",
+          desc: "Group project cooperation and conflict reveal team relationship dynamics.",
+          roles: "Student, Parent, Teacher - 4 agents",
+          theory: "Social Interdependence Theory",
+          measures: "SCI-2; CES"
+        }
+      ],
+      [
+        {
+          name: "Parent-Teacher Conflict Over Grades and Effort",
+          desc: "Miscommunication around grades tests school-family communication repair.",
+          roles: "Student, Parent, Teacher - 3 agents",
+          theory: "Attribution; Communication Accommodation",
+          measures: "STAI; GMS"
+        },
+        {
+          name: "Parental Influence on Extracurricular Choices",
+          desc: "Parental expectations shape career exploration and decision-making.",
+          roles: "Student, Parent, Teacher - 3 agents",
+          theory: "Social Cognitive Career Theory",
+          measures: "IMI; BPNSFS Autonomy"
+        },
+        {
+          name: "Peer Pressure and Conformity",
+          desc: "Risk-taking conformity is tested against resistance-skills interventions.",
+          roles: "Student, Teacher - 4 agents",
+          theory: "Social Impact; Normative Social Influence",
+          measures: "BFNE; RSES"
+        },
+        {
+          name: "Sociometric Status",
+          desc: "Social media use is linked to body image and self-esteem outcomes.",
+          roles: "Student, Teacher - 5 agents",
+          theory: "Objectification; Social Comparison",
+          measures: "PSSM; LSDQ"
+        }
+      ],
+      [
+        {
+          name: "The Cheating Dilemma",
+          desc: "Academic integrity choices are tested with integrity education interventions.",
+          roles: "Student, Teacher - 4 agents",
+          theory: "Planned Behavior; Social Cognitive Theory",
+          measures: "AMS; PANAS-X"
+        },
+        {
+          name: "The Path to School Refusal",
+          desc: "Social anxiety and avoidance are tracked with cognitive-behavioral support.",
+          roles: "Student, Parent, Teacher - 4 agents",
+          theory: "Cognitive Model of Social Anxiety",
+          measures: "SRAS-R; DASS-21"
+        },
+        {
+          name: "The Spread of Gossip",
+          desc: "Gossip effects on social networks, self-esteem, and trust are examined.",
+          roles: "Student, Teacher - 5 agents",
+          theory: "Social Identity; Uncertainty Reduction",
+          measures: "UCLA-8; PSS-10"
+        },
+        {
+          name: "Transfer Student Integration",
+          desc: "Peer attitudes and school climate shape belonging and adaptation.",
+          roles: "Student, Teacher - 4 agents",
+          theory: "Social Identity; Contact Hypothesis",
+          measures: "PSSM; PSS-10"
+        }
+      ]
+    ];
+
+    const scenarioSlider = document.getElementById("scenarioSlider");
+    const scenarioPageIndicator = document.getElementById("scenarioPageIndicator");
+    let scenarioPageIndex = 0;
+
+    function renderScenarioCards() {
+      scenarioSlider.innerHTML = scenarioPages.map(function (page) {
+        return [
+          '<div class="scenario-slide">',
+          page.map(function (scenario) {
+            return [
+              '<article class="scenario-card">',
+              '<h4>' + scenario.name + '</h4>',
+              '<p>' + scenario.desc + '</p>',
+              '<div class="scenario-meta">',
+              '<span><b>Roles:</b> ' + scenario.roles + '</span>',
+              '<span><b>Theory:</b> ' + scenario.theory + '</span>',
+              '<span><b>Measures:</b> ' + scenario.measures + '</span>',
+              '</div>',
+              '</article>'
+            ].join("");
+          }).join(""),
+          '</div>'
+        ].join("");
+      }).join("");
+    }
+
+    function renderScenarioPage(nextIndex) {
+      scenarioPageIndex = (nextIndex + scenarioPages.length) % scenarioPages.length;
+      scenarioSlider.style.transform = "translateX(-" + (scenarioPageIndex * 100) + "%)";
+      scenarioPageIndicator.textContent = (scenarioPageIndex + 1) + " / " + scenarioPages.length;
+    }
+
+    document.getElementById("scenarioPrev").addEventListener("click", function () {
+      renderScenarioPage(scenarioPageIndex - 1);
+    });
+
+    document.getElementById("scenarioNext").addEventListener("click", function () {
+      renderScenarioPage(scenarioPageIndex + 1);
+    });
+
+    renderScenarioCards();
+    renderScenarioPage(0);
+
+    const demoModal = document.getElementById("demoModal");
+    const demoCloseBtn = document.getElementById("demoCloseBtn");
+
+    document.getElementById("liveDemoBtn").addEventListener("click", function () {
+      demoModal.classList.add("show");
+      demoModal.setAttribute("aria-hidden", "false");
+      demoCloseBtn.focus();
+    });
+
+    demoCloseBtn.addEventListener("click", function () {
+      demoModal.classList.remove("show");
+      demoModal.setAttribute("aria-hidden", "true");
+    });
+
+    demoModal.addEventListener("click", function (event) {
+      if (event.target === demoModal) {
+        demoModal.classList.remove("show");
+        demoModal.setAttribute("aria-hidden", "true");
+      }
+    });
+
+    const copyCitationBtn = document.getElementById("copyCitationBtn");
+    const citationCode = document.getElementById("citationCode");
+
+    copyCitationBtn.addEventListener("click", function () {
+      const citation = citationCode.textContent;
+      navigator.clipboard.writeText(citation).then(function () {
+        copyCitationBtn.textContent = "Copied";
+        window.setTimeout(function () {
+          copyCitationBtn.textContent = "Copy";
+        }, 1600);
+      });
+    });
+
+    const branchModal = document.getElementById("branchModal");
+    const branchCloseBtn = document.getElementById("branchCloseBtn");
+    const branchPrevBtn = document.getElementById("branchPrevBtn");
+    const branchNextBtn = document.getElementById("branchNextBtn");
+    const branchModalImage = document.getElementById("branchModalImage");
+    const branchModalTitle = document.getElementById("branchModalTitle");
+    const branchModalText = document.getElementById("branchModalText");
+    const branchFigures = Array.from(document.querySelectorAll(".gallery figure"));
+    let activeBranchIndex = 0;
+
+    function showBranch(index) {
+      activeBranchIndex = (index + branchFigures.length) % branchFigures.length;
+      const figure = branchFigures[activeBranchIndex];
+      const image = figure.querySelector("img");
+      const title = figure.querySelector("figcaption b").textContent;
+      const caption = figure.querySelector("figcaption").textContent.replace(title, "").trim();
+      branchModalImage.setAttribute("src", image.getAttribute("src"));
+      branchModalImage.setAttribute("alt", image.getAttribute("alt"));
+      branchModalTitle.textContent = title;
+      branchModalText.textContent = caption;
+    }
+
+    function closeBranchModal() {
+      branchModal.classList.remove("show");
+      branchModal.setAttribute("aria-hidden", "true");
+      branchModalImage.setAttribute("src", "");
+      branchModalImage.setAttribute("alt", "");
+    }
+
+    branchFigures.forEach(function (figure, index) {
+      const image = figure.querySelector("img");
+      image.addEventListener("click", function () {
+        showBranch(index);
+        branchModal.classList.add("show");
+        branchModal.setAttribute("aria-hidden", "false");
+        branchCloseBtn.focus();
+      });
+    });
+
+    branchCloseBtn.addEventListener("click", closeBranchModal);
+    branchPrevBtn.addEventListener("click", function () {
+      showBranch(activeBranchIndex - 1);
+    });
+    branchNextBtn.addEventListener("click", function () {
+      showBranch(activeBranchIndex + 1);
+    });
+
+    branchModal.addEventListener("click", function (event) {
+      if (event.target === branchModal) {
+        closeBranchModal();
+      }
+    });
+
+    document.addEventListener("keydown", function (event) {
+      if (event.key === "Escape" && demoModal.classList.contains("show")) {
+        demoModal.classList.remove("show");
+        demoModal.setAttribute("aria-hidden", "true");
+      }
+      if (event.key === "Escape" && branchModal.classList.contains("show")) {
+        closeBranchModal();
+      }
+      if (branchModal.classList.contains("show") && event.key === "ArrowLeft") {
+        showBranch(activeBranchIndex - 1);
+      }
+      if (branchModal.classList.contains("show") && event.key === "ArrowRight") {
+        showBranch(activeBranchIndex + 1);
+      }
+    });
+  </script>
+</body>
+</html>
