@@ -146,10 +146,23 @@
       margin:0 auto;
     }
 
+    .hero-icon{
+      width:400px;
+      height:400px;
+      display:block;
+      margin:0 auto 18px;
+      object-fit:contain;
+    }
+
+    .eyebrow-row{
+      margin-top:24px;
+      display:flex;
+      justify-content:center;
+    }
+
     .eyebrow{
       display:inline-flex;
       align-items:center;
-      gap:10px;
       padding:7px 12px;
       border:1px solid rgba(255,154,47,.32);
       border-radius:999px;
@@ -159,15 +172,6 @@
       font-weight:700;
       letter-spacing:.03em;
       text-transform:uppercase;
-    }
-
-    .eyebrow::before{
-      content:"";
-      width:8px;
-      height:8px;
-      border-radius:50%;
-      background:var(--green);
-      box-shadow:0 0 18px var(--green);
     }
 
     h1{
@@ -244,7 +248,7 @@
       flex-wrap:wrap;
       gap:12px;
       justify-content:center;
-      margin-top:28px;
+      margin-top:64px;
     }
 
     .demo-row{
@@ -1394,8 +1398,8 @@
   <main id="top" class="wrap">
     <section class="hero" aria-labelledby="title">
       <div class="hero-main">
-        <span class="eyebrow">ICML 2026</span>
-        <h1 id="title">EduMirror</h1>
+        <img class="hero-icon" src="assets/icon.png" alt="EduMirror icon" />
+        <!-- <h1 id="title">EduMirror</h1> -->
         <p class="title-sub">Modeling Educational Social Dynamics with Value-driven Multi-agent Simulation</p>
         <p class="authors">
           <a href="https://openreview.net/profile?id=~Jingzhe_Lin1" target="_blank" rel="noopener">Jingzhe Lin</a>*<sup>1</sup>,
@@ -1408,6 +1412,9 @@
           <div><sup>2</sup> School of Systems Science, Beijing Normal University, Beijing, China.</div>
           <div><sup>3</sup> Information Hub, The Hong Kong University of Science and Technology (Guangzhou), Guangzhou, China.</div>
           <div><sup>*</sup> Equal contribution. <sup>&#9993;</sup> Corresponding author.</div>
+        </div>
+        <div class="eyebrow-row">
+          <span class="eyebrow">ICML 2026</span>
         </div>
         <div class="btn-row">
           <a class="btn" href="assets/EduMirror.pdf" target="_blank" rel="noopener">
