@@ -1464,13 +1464,18 @@
           </a>
         </div>
         <div class="demo-row">
-          <button class="btn primary demo" type="button" id="liveDemoBtn">
+          <a
+            class="btn primary demo"
+            href="https://gest.bnu.edu.cn/edumirror/"
+            target="_blank"
+            rel="noreferrer"
+          >
             <svg viewBox="0 0 24 24" fill="none" aria-hidden="true">
               <path d="M9 7.5v9l7-4.5-7-4.5Z" fill="currentColor"/>
               <path d="M12 22a10 10 0 1 0 0-20 10 10 0 0 0 0 20Z" stroke="currentColor" stroke-width="1.8"/>
             </svg>
             Live Demo
-          </button>
+          </a>
         </div>
       </div>
     </section>
@@ -1879,13 +1884,6 @@
     <div class="wrap">&copy; <span id="year"></span> EduMirror Project Page</div>
   </footer>
 
-  <div class="demo-modal" id="demoModal" role="dialog" aria-modal="true" aria-labelledby="demoModalTitle" aria-hidden="true">
-    <div class="demo-dialog">
-      <h3 id="demoModalTitle">Live Demo Coming Soon</h3>
-      <button class="btn primary demo-close" type="button" id="demoCloseBtn">Got it</button>
-    </div>
-  </div>
-
   <div class="branch-modal" id="branchModal" role="dialog" aria-modal="true" aria-labelledby="branchModalTitle" aria-hidden="true">
     <div class="branch-dialog">
       <button class="branch-close" type="button" id="branchCloseBtn" aria-label="Close enlarged card">&times;</button>
@@ -2106,27 +2104,6 @@
     renderScenarioCards();
     renderScenarioPage(0);
 
-    const demoModal = document.getElementById("demoModal");
-    const demoCloseBtn = document.getElementById("demoCloseBtn");
-
-    document.getElementById("liveDemoBtn").addEventListener("click", function () {
-      demoModal.classList.add("show");
-      demoModal.setAttribute("aria-hidden", "false");
-      demoCloseBtn.focus();
-    });
-
-    demoCloseBtn.addEventListener("click", function () {
-      demoModal.classList.remove("show");
-      demoModal.setAttribute("aria-hidden", "true");
-    });
-
-    demoModal.addEventListener("click", function (event) {
-      if (event.target === demoModal) {
-        demoModal.classList.remove("show");
-        demoModal.setAttribute("aria-hidden", "true");
-      }
-    });
-
     const copyCitationBtn = document.getElementById("copyCitationBtn");
     const citationCode = document.getElementById("citationCode");
 
@@ -2194,10 +2171,6 @@
     });
 
     document.addEventListener("keydown", function (event) {
-      if (event.key === "Escape" && demoModal.classList.contains("show")) {
-        demoModal.classList.remove("show");
-        demoModal.setAttribute("aria-hidden", "true");
-      }
       if (event.key === "Escape" && branchModal.classList.contains("show")) {
         closeBranchModal();
       }
