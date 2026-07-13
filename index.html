@@ -97,6 +97,7 @@
       position:sticky;
       top:0;
       z-index:4;
+      padding-top:env(safe-area-inset-top);
       backdrop-filter:blur(18px);
       background:rgba(255, 249, 239, .84);
       border-bottom:1px solid var(--line);
@@ -143,6 +144,36 @@
 
     .nav-links a{ color:var(--muted); }
     .nav-links a:hover{ color:var(--text); text-decoration:none; }
+
+    .nav-toggle{
+      display:none;
+      width:44px;
+      height:44px;
+      flex:0 0 44px;
+      align-items:center;
+      justify-content:center;
+      border:1px solid rgba(35,48,71,.16);
+      border-radius:10px;
+      color:var(--text);
+      background:rgba(255,255,255,.68);
+      cursor:pointer;
+      transition:background .18s ease, border-color .18s ease, transform .18s ease;
+    }
+
+    .nav-toggle:hover,
+    .nav-toggle[aria-expanded="true"]{
+      border-color:rgba(93,91,224,.28);
+      background:#fff;
+    }
+
+    .nav-toggle:active{
+      transform:scale(.96);
+    }
+
+    .nav-toggle svg{
+      width:22px;
+      height:22px;
+    }
 
     .hero{
       min-height:calc(82vh - 64px);
@@ -227,6 +258,7 @@
     .authors a{
       color:var(--green);
       font-weight:800;
+      white-space:nowrap;
     }
 
     .authors a:hover{
@@ -253,6 +285,21 @@
       margin-right:4px;
       font-size:75%;
       vertical-align:super;
+    }
+
+    .affils-disclosure > summary{
+      display:none;
+    }
+
+    .affils-disclosure > .affils{
+      display:block;
+    }
+
+    .affil-notes{
+      margin:8px auto 0;
+      color:var(--muted);
+      font-size:17px;
+      line-height:1.6;
     }
 
     .btn-row{
@@ -1069,8 +1116,12 @@
     }
 
     .results{
+      position:relative;
       overflow-x:auto;
+      overscroll-behavior-inline:contain;
       padding:18px 72px;
+      scrollbar-color:rgba(93,91,224,.45) rgba(93,91,224,.08);
+      scrollbar-width:thin;
     }
 
     table{
@@ -1079,12 +1130,14 @@
       border-collapse:collapse;
       color:var(--soft);
       font-size:14px;
+      font-variant-numeric:tabular-nums;
     }
 
     th, td{
       padding:12px;
       border-bottom:1px solid var(--line);
       text-align:left;
+      vertical-align:middle;
     }
 
     thead th{
@@ -1099,10 +1152,39 @@
     tbody td:first-child{ font-weight:800; }
     td strong{ color:var(--cyan); }
 
+    @media (min-width: 641px){
+      .results th:first-child,
+      .results td:first-child{
+        position:sticky;
+        left:0;
+        z-index:1;
+        background:var(--panel2);
+        box-shadow:8px 0 14px rgba(35,48,71,.05);
+      }
+
+      .results thead th:first-child{
+        z-index:2;
+        background:#fffdf8;
+      }
+    }
+
     .gallery{
       display:grid;
       grid-template-columns:repeat(4, 1fr);
       gap:12px;
+    }
+
+    .gallery-browser{
+      position:relative;
+    }
+
+    .gallery-viewport{
+      min-width:0;
+    }
+
+    .gallery-nav,
+    .gallery-page-indicator{
+      display:none;
     }
 
     .gallery figure{
@@ -1332,38 +1414,55 @@
       }
 
       .nav-inner{
-        align-items:stretch;
-        gap:6px;
+        position:relative;
+        align-items:center;
+        gap:12px;
         min-height:auto;
         padding:8px 0 10px;
       }
 
       .brand{
         min-height:44px;
+        min-width:0;
       }
 
       .nav-links{
-        width:100%;
-        flex-wrap:nowrap;
-        justify-content:flex-start;
-        gap:4px;
-        overflow-x:auto;
-        padding-bottom:2px;
-        scrollbar-width:none;
-        -webkit-overflow-scrolling:touch;
+        position:absolute;
+        top:calc(100% - 2px);
+        left:0;
+        right:0;
+        width:auto;
+        display:none;
+        flex-direction:column;
+        gap:2px;
+        padding:8px;
+        border:1px solid var(--line);
+        border-radius:12px;
+        background:rgba(255,253,248,.98);
+        box-shadow:0 18px 42px rgba(35,48,71,.16);
+        color:var(--muted);
       }
 
-      .nav-links::-webkit-scrollbar{
-        display:none;
+      .nav-links.is-open{
+        display:flex;
       }
 
       .nav-links a{
-        flex:0 0 auto;
-        min-height:44px;
-        display:inline-flex;
+        width:100%;
+        min-height:48px;
+        display:flex;
         align-items:center;
-        padding:0 10px;
+        padding:0 12px;
         border-radius:8px;
+      }
+
+      .nav-links a:hover,
+      .nav-links a:focus-visible{
+        background:rgba(93,91,224,.08);
+      }
+
+      .nav-toggle{
+        display:inline-flex;
       }
 
       #demo-video > .wrap{
@@ -1409,9 +1508,56 @@
       .affils{
         max-width:32rem;
         margin-top:12px;
-        font-size:15px;
-        line-height:1.55;
-        text-align:left;
+        font-size:14px;
+        line-height:1.5;
+        text-align:center;
+      }
+
+      .affils-disclosure > summary{
+        display:inline-flex;
+        align-items:center;
+        justify-content:center;
+        gap:8px;
+        min-height:44px;
+        margin:12px auto 0;
+        padding:8px 0;
+        border:0;
+        color:var(--muted);
+        background:transparent;
+        font-size:14px;
+        font-weight:400;
+        cursor:pointer;
+        list-style:none;
+        line-height:1.5;
+      }
+
+      .affils-disclosure > summary::-webkit-details-marker{
+        display:none;
+      }
+
+      .affils-disclosure > summary::after{
+        content:"+";
+        font-size:14px;
+        line-height:1;
+      }
+
+      .affils-disclosure[open] > summary::after{
+        content:"−";
+      }
+
+      .affils-disclosure > .affils{
+        display:none;
+      }
+
+      .affils-disclosure[open] > .affils{
+        display:block;
+      }
+
+      .affil-notes{
+        margin-top:8px;
+        font-size:14px;
+        line-height:1.5;
+        text-align:center;
       }
 
       .eyebrow-row{
@@ -1523,6 +1669,33 @@
         padding:16px 48px 46px;
       }
 
+      .scenario-browser-head p{
+        font-size:16px;
+        line-height:1.6;
+      }
+
+      .scenario-card{
+        min-height:0;
+        gap:12px;
+      }
+
+      .scenario-card h4{
+        font-size:18px;
+        line-height:1.3;
+      }
+
+      .scenario-card p{
+        font-size:15px;
+        line-height:1.55;
+      }
+
+      .scenario-meta{
+        margin-top:0;
+        gap:7px;
+        font-size:14px;
+        line-height:1.5;
+      }
+
       .scenario-nav{
         width:38px;
         height:38px;
@@ -1544,6 +1717,16 @@
 
       .pie-visual{
         width:min(100%, 260px);
+      }
+
+      .pie-legend{
+        width:fit-content;
+        max-width:100%;
+        margin-inline:auto;
+      }
+
+      .pie-item{
+        width:100%;
       }
 
       .pie-tag{
@@ -1590,8 +1773,276 @@
         margin-top:8px;
       }
 
+      .heatmap-wrap{
+        overflow:hidden;
+      }
+
+      .heatmap{
+        width:100%;
+        min-width:0;
+        grid-template-columns:56px minmax(0, 1fr) 26px;
+        grid-template-rows:repeat(6, 40px) 38px;
+        column-gap:6px;
+        font-size:10px;
+      }
+
+      .heatmap-y{
+        grid-template-rows:repeat(6, 40px);
+        gap:1px;
+      }
+
+      .heatmap-label{
+        padding-right:4px;
+        line-height:1.1;
+      }
+
+      .heatmap-matrix{
+        grid-template-rows:repeat(6, 40px);
+        gap:1px;
+      }
+
+      .heatmap-xaxis{
+        gap:1px;
+        padding-top:6px;
+      }
+
+      .heatmap-x{
+        font-size:9px;
+        line-height:1.05;
+      }
+
+      .heat-cell{
+        font-size:10px;
+      }
+
+      .heat-scale{
+        width:10px;
+      }
+
+      .heat-scale-labels{
+        padding-left:11px;
+        font-size:8px;
+      }
+
+      .heatmap-card .experiment-note{
+        margin-top:20px;
+      }
+
       .results{
-        padding:14px;
+        padding:0;
+        overflow:visible;
+        scrollbar-width:none;
+      }
+
+      .results table{
+        width:100%;
+        min-width:0;
+        display:block;
+        font-size:14px;
+      }
+
+      .results thead{
+        position:absolute;
+        width:1px;
+        height:1px;
+        padding:0;
+        margin:-1px;
+        overflow:hidden;
+        clip:rect(0, 0, 0, 0);
+        white-space:nowrap;
+        border:0;
+      }
+
+      .results tbody{
+        display:grid;
+        gap:14px;
+      }
+
+      .results tr{
+        display:grid;
+        grid-template-columns:repeat(6, minmax(0, 1fr));
+        column-gap:6px;
+        row-gap:2px;
+        padding:10px 12px 12px;
+        border:1px solid var(--line);
+        border-radius:12px;
+        background:linear-gradient(180deg, rgba(255,255,255,.72), rgba(255,255,255,.45));
+        box-shadow:0 8px 18px rgba(92,83,197,.05);
+      }
+
+      .results td{
+        grid-column:span 2;
+        min-width:0;
+        min-height:46px;
+        display:flex;
+        flex-direction:column;
+        align-items:flex-start;
+        gap:4px;
+        padding:8px 5px 6px;
+        border:0;
+        border-radius:0;
+        background:transparent;
+        line-height:1.25;
+      }
+
+      .results td:nth-child(5),
+      .results td:nth-child(6){
+        grid-column:span 3;
+      }
+
+      .results td::before{
+        content:attr(data-label);
+        color:var(--muted);
+        font-size:10px;
+        font-weight:800;
+        letter-spacing:.05em;
+        line-height:1.2;
+        text-transform:uppercase;
+      }
+
+      .results td:first-child{
+        grid-column:1 / -1;
+        display:flex;
+        flex-direction:row;
+        align-items:center;
+        justify-content:space-between;
+        min-height:0;
+        margin-bottom:2px;
+        padding:8px 10px;
+        color:var(--text);
+        background:linear-gradient(135deg, rgba(255,179,84,.2), rgba(247,214,117,.22));
+        border-color:rgba(255,154,47,.24);
+        border:1px solid rgba(255,154,47,.24);
+        border-radius:8px;
+      }
+
+      .results td:first-child::before{
+        color:var(--text);
+        font-size:12px;
+      }
+
+      .results td strong{
+        font-size:17px;
+      }
+
+      .results tbody tr:hover td{
+        background:transparent;
+      }
+
+      .results tbody tr:hover td:first-child{
+        background:linear-gradient(135deg, rgba(255,179,84,.2), rgba(247,214,117,.22));
+      }
+
+      /* Keep the mobile scalability data as one comparison table. */
+      .results{
+        padding:0;
+        border:1px solid var(--line);
+        border-radius:12px;
+        overflow:hidden;
+        background:rgba(255,255,255,.5);
+      }
+
+      .results table{
+        display:table;
+        width:100%;
+        min-width:0;
+        table-layout:fixed;
+        border-collapse:separate;
+        border-spacing:0;
+      }
+
+      .results thead{
+        position:static;
+        display:table-header-group;
+        width:auto;
+        height:auto;
+        padding:0;
+        margin:0;
+        overflow:visible;
+        clip:auto;
+        white-space:normal;
+      }
+
+      .results tbody{
+        display:table-row-group;
+      }
+
+      .results tr{
+        display:table-row;
+        padding:0;
+        border:0;
+        border-radius:0;
+        background:transparent;
+        box-shadow:none;
+      }
+
+      .results th,
+      .results td{
+        display:table-cell;
+        width:auto;
+        min-height:0;
+        padding:10px 4px;
+        border:0;
+        border-right:1px solid rgba(92,83,197,.12);
+        border-bottom:1px solid var(--line);
+        border-radius:0;
+        background:transparent;
+        text-align:center;
+        vertical-align:middle;
+        line-height:1.2;
+        word-break:break-word;
+      }
+
+      .results th{
+        color:var(--green);
+        background:rgba(255,179,84,.12);
+        font-size:10px;
+        letter-spacing:0;
+        text-transform:none;
+      }
+
+      .results th:first-child,
+      .results td:first-child{
+        width:58px;
+        position:static;
+        margin:0;
+        padding-inline:6px;
+        color:var(--text);
+        text-align:left;
+        background:rgba(255,179,84,.1);
+        border-right:1px solid rgba(255,154,47,.24);
+        border-radius:0;
+      }
+
+      .results td:first-child{
+        display:table-cell;
+        font-weight:800;
+      }
+
+      .results td::before{
+        display:none;
+      }
+
+      .results td:nth-child(5),
+      .results td:nth-child(6){
+        grid-column:auto;
+      }
+
+      .results th:last-child,
+      .results td:last-child{
+        border-right:0;
+      }
+
+      .results tbody tr:last-child td{
+        border-bottom:0;
+      }
+
+      .results tbody tr:hover td{
+        background:rgba(255,255,255,.32);
+      }
+
+      .results tbody tr:hover td:first-child{
+        background:rgba(255,179,84,.1);
       }
 
       .experiment-figure{
@@ -1621,6 +2072,25 @@
         line-height:1.6;
       }
 
+      .experiment-table,
+      .experiment-table .results,
+      .experiment-table table,
+      .experiment-table .experiment-note{
+        width:100%;
+        max-width:100%;
+        margin-left:auto;
+        margin-right:auto;
+      }
+
+      .experiment-table .experiment-card-head{
+        text-align:center;
+      }
+
+      .results th:first-child,
+      .results td:first-child{
+        text-align:center;
+      }
+
       .gallery figcaption{
         padding:14px;
         font-size:14px;
@@ -1630,6 +2100,69 @@
       .gallery figure:hover{
         transform:none;
         box-shadow:none;
+      }
+
+      .gallery-browser{
+        padding:0 46px 36px;
+      }
+
+      .gallery-viewport{
+        overflow:hidden;
+      }
+
+      .gallery{
+        display:flex;
+        grid-template-columns:none;
+        gap:0;
+        transition:transform .38s ease;
+      }
+
+      .gallery figure{
+        flex:0 0 100%;
+        min-width:100%;
+      }
+
+      .gallery-nav{
+        width:40px;
+        height:40px;
+        position:absolute;
+        top:50%;
+        z-index:2;
+        display:grid;
+        place-items:center;
+        border:1px solid rgba(35,48,71,.86);
+        border-radius:999px;
+        color:#fff;
+        background:#233047;
+        cursor:pointer;
+        transform:translateY(-50%);
+        transition:transform .15s ease, background .15s ease;
+      }
+
+      .gallery-nav:hover{
+        transform:translateY(-50%) scale(1.04);
+        background:#172237;
+      }
+
+      .gallery-nav.prev{ left:0; }
+      .gallery-nav.next{ right:0; }
+
+      .gallery-nav svg{
+        width:19px;
+        height:19px;
+      }
+
+      .gallery-page-indicator{
+        min-width:48px;
+        position:absolute;
+        left:50%;
+        bottom:8px;
+        display:block;
+        transform:translateX(-50%);
+        color:var(--muted);
+        font-size:14px;
+        font-weight:800;
+        text-align:center;
       }
 
       .branch-modal{
@@ -1661,16 +2194,20 @@
 
       .citation{
         padding:16px;
+        overflow:hidden;
       }
 
       .copy-citation{
-        top:10px;
-        right:10px;
+        display:none;
       }
 
       pre{
-        padding-right:76px;
-        font-size:12px;
+        padding-right:0;
+        font-size:11.5px;
+        line-height:1.6;
+        white-space:pre-wrap;
+        overflow-wrap:anywhere;
+        word-break:break-word;
       }
 
       footer{
@@ -1716,7 +2253,12 @@
         <img class="brand-mark" src="assets/icon.png" alt="" />
         <span>EduMirror</span>
       </a>
-      <nav class="nav-links" aria-label="Page navigation">
+      <button class="nav-toggle" type="button" id="navToggle" aria-expanded="false" aria-controls="pageNav" aria-label="Open page navigation">
+        <svg viewBox="0 0 24 24" fill="none" aria-hidden="true">
+          <path d="M4 7h16M4 12h16M4 17h16" stroke="currentColor" stroke-width="2" stroke-linecap="round" />
+        </svg>
+      </button>
+      <nav class="nav-links" id="pageNav" aria-label="Page navigation">
         <a href="#abstract">Abstract</a>
         <a href="#architecture">Architecture</a>
         <a href="#scenarios">Scenarios</a>
@@ -1738,12 +2280,17 @@
           <a href="https://openreview.net/profile?id=~Yongdan_Zeng1" target="_blank" rel="noopener">Yongdan Zeng</a>*<sup>1,5</sup>,
           <a href="https://fangweizhong.xyz/" target="_blank" rel="noopener">Fangwei Zhong</a><sup>1,2,3,&#9993;</sup>
         </p>
-        <div class="affils">
-          <div><sup>1</sup> School of Artificial Intelligence, Beijing Normal University, Beijing, China.</div>
-          <div><sup>2</sup> Beijing Key Laboratory of Artificial Intelligence for Education, Beijing, China.</div>
-          <div><sup>3</sup> Engineering Research Center of Intelligent Technology and Educational Application, Ministry of Education, Beijing, China.</div>
-          <div><sup>4</sup> School of Systems Science, Beijing Normal University, Beijing, China.</div>
-          <div><sup>5</sup> Information Hub, The Hong Kong University of Science and Technology (Guangzhou), Guangzhou, China.</div>
+        <details class="affils-disclosure">
+          <summary>View affiliations</summary>
+          <div class="affils">
+            <div><sup>1</sup> School of Artificial Intelligence, Beijing Normal University, Beijing, China.</div>
+            <div><sup>2</sup> Beijing Key Laboratory of Artificial Intelligence for Education, Beijing, China.</div>
+            <div><sup>3</sup> Engineering Research Center of Intelligent Technology and Educational Application, Ministry of Education, Beijing, China.</div>
+            <div><sup>4</sup> School of Systems Science, Beijing Normal University, Beijing, China.</div>
+            <div><sup>5</sup> Information Hub, The Hong Kong University of Science and Technology (Guangzhou), Guangzhou, China.</div>
+          </div>
+        </details>
+        <div class="affil-notes">
           <div><sup>*</sup> Equal contribution. <sup>&#9993;</sup> Corresponding author.</div>
         </div>
         <div class="eyebrow-row">
@@ -2077,9 +2624,30 @@
                 </tr>
               </thead>
               <tbody>
-                <tr><td>5</td><td><strong>4.80</strong></td><td>4.25</td><td>4.10</td><td>3.35</td><td>2.35</td></tr>
-                <tr><td>15</td><td><strong>4.18</strong></td><td>3.60</td><td>3.57</td><td>3.53</td><td>2.93</td></tr>
-                <tr><td>30</td><td><strong>4.03</strong></td><td>3.83</td><td>3.86</td><td>3.12</td><td>2.41</td></tr>
+                <tr>
+                  <td data-label="Agents">5</td>
+                  <td data-label="EduMirror"><strong>4.80</strong></td>
+                  <td data-label="LLMob">4.25</td>
+                  <td data-label="BabyAGI">4.10</td>
+                  <td data-label="D2A">3.35</td>
+                  <td data-label="ReAct">2.35</td>
+                </tr>
+                <tr>
+                  <td data-label="Agents">15</td>
+                  <td data-label="EduMirror"><strong>4.18</strong></td>
+                  <td data-label="LLMob">3.60</td>
+                  <td data-label="BabyAGI">3.57</td>
+                  <td data-label="D2A">3.53</td>
+                  <td data-label="ReAct">2.93</td>
+                </tr>
+                <tr>
+                  <td data-label="Agents">30</td>
+                  <td data-label="EduMirror"><strong>4.03</strong></td>
+                  <td data-label="LLMob">3.83</td>
+                  <td data-label="BabyAGI">3.86</td>
+                  <td data-label="D2A">3.12</td>
+                  <td data-label="ReAct">2.41</td>
+                </tr>
               </tbody>
             </table>
           </div>
@@ -2133,7 +2701,14 @@
           <h2 id="gallery-title">Intervention branches in the family financial strain scenario.</h2>
         </div>
       </div>
-      <div class="gallery">
+      <div class="gallery-browser" aria-label="Counterfactual outcome gallery">
+        <button class="gallery-nav prev" type="button" id="galleryPrevBtn" aria-label="Previous counterfactual outcome">
+          <svg viewBox="0 0 24 24" fill="none" aria-hidden="true">
+            <path d="M15 18 9 12l6-6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+          </svg>
+        </button>
+        <div class="gallery-viewport">
+          <div class="gallery" id="gallerySlider">
         <figure>
           <img src="assets/examples/Baseline.png" alt="Baseline no-intervention scenario" />
           <figcaption>
@@ -2162,6 +2737,14 @@
             Class norms shift through collective discussion, turning an expensive trip into a cheaper group option.
           </figcaption>
         </figure>
+          </div>
+        </div>
+        <button class="gallery-nav next" type="button" id="galleryNextBtn" aria-label="Next counterfactual outcome">
+          <svg viewBox="0 0 24 24" fill="none" aria-hidden="true">
+            <path d="m9 18 6-6-6-6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+          </svg>
+        </button>
+        <span class="gallery-page-indicator" id="galleryPageIndicator">1 / 4</span>
       </div>
       <p class="section-copy gallery-note">
         EduMirror turns one family financial strain scenario into parallel intervention timelines, making
@@ -2217,6 +2800,39 @@
 
   <script>
     document.getElementById("year").textContent = new Date().getFullYear();
+
+    const navToggle = document.getElementById("navToggle");
+    const pageNav = document.getElementById("pageNav");
+
+    function closeMobileNav() {
+      pageNav.classList.remove("is-open");
+      navToggle.setAttribute("aria-expanded", "false");
+      navToggle.setAttribute("aria-label", "Open page navigation");
+    }
+
+    navToggle.addEventListener("click", function () {
+      const isOpen = pageNav.classList.toggle("is-open");
+      navToggle.setAttribute("aria-expanded", String(isOpen));
+      navToggle.setAttribute("aria-label", isOpen ? "Close page navigation" : "Open page navigation");
+    });
+
+    pageNav.addEventListener("click", function (event) {
+      if (event.target.closest("a")) {
+        closeMobileNav();
+      }
+    });
+
+    document.addEventListener("click", function (event) {
+      if (!event.target.closest(".nav")) {
+        closeMobileNav();
+      }
+    });
+
+    document.addEventListener("keydown", function (event) {
+      if (event.key === "Escape") {
+        closeMobileNav();
+      }
+    });
 
     const scenarioPages = [
       [
@@ -2374,9 +2990,19 @@
     const scenarioSlider = document.getElementById("scenarioSlider");
     const scenarioPageIndicator = document.getElementById("scenarioPageIndicator");
     let scenarioPageIndex = 0;
+    let scenarioSlides = [];
+    let scenarioLayoutIsMobile = window.matchMedia("(max-width: 640px)").matches;
 
     function renderScenarioCards() {
-      scenarioSlider.innerHTML = scenarioPages.map(function (page) {
+      scenarioSlides = scenarioLayoutIsMobile
+        ? scenarioPages.reduce(function (slides, page) {
+            return slides.concat(page.map(function (scenario) {
+              return [scenario];
+            }));
+          }, [])
+        : scenarioPages;
+
+      scenarioSlider.innerHTML = scenarioSlides.map(function (page) {
         return [
           '<div class="scenario-slide">',
           page.map(function (scenario) {
@@ -2398,10 +3024,22 @@
     }
 
     function renderScenarioPage(nextIndex) {
-      scenarioPageIndex = (nextIndex + scenarioPages.length) % scenarioPages.length;
+      scenarioPageIndex = (nextIndex + scenarioSlides.length) % scenarioSlides.length;
       scenarioSlider.style.transform = "translateX(-" + (scenarioPageIndex * 100) + "%)";
-      scenarioPageIndicator.textContent = (scenarioPageIndex + 1) + " / " + scenarioPages.length;
+      scenarioPageIndicator.textContent = (scenarioPageIndex + 1) + " / " + scenarioSlides.length;
     }
+
+    window.addEventListener("resize", function () {
+      const nextLayoutIsMobile = window.matchMedia("(max-width: 640px)").matches;
+      if (nextLayoutIsMobile === scenarioLayoutIsMobile) {
+        return;
+      }
+
+      scenarioLayoutIsMobile = nextLayoutIsMobile;
+      scenarioPageIndex = 0;
+      renderScenarioCards();
+      renderScenarioPage(0);
+    });
 
     document.getElementById("scenarioPrev").addEventListener("click", function () {
       renderScenarioPage(scenarioPageIndex - 1);
@@ -2435,7 +3073,35 @@
     const branchModalTitle = document.getElementById("branchModalTitle");
     const branchModalText = document.getElementById("branchModalText");
     const branchFigures = Array.from(document.querySelectorAll(".gallery figure"));
+    const gallerySlider = document.getElementById("gallerySlider");
+    const galleryPageIndicator = document.getElementById("galleryPageIndicator");
+    const galleryPrevBtn = document.getElementById("galleryPrevBtn");
+    const galleryNextBtn = document.getElementById("galleryNextBtn");
+    let galleryIndex = 0;
     let activeBranchIndex = 0;
+
+    function renderGallery(index) {
+      galleryIndex = (index + branchFigures.length) % branchFigures.length;
+      const isMobileGallery = window.matchMedia("(max-width: 640px)").matches;
+      gallerySlider.style.transform = isMobileGallery
+        ? "translateX(-" + (galleryIndex * 100) + "%)"
+        : "";
+      galleryPageIndicator.textContent = (galleryIndex + 1) + " / " + branchFigures.length;
+    }
+
+    galleryPrevBtn.addEventListener("click", function () {
+      renderGallery(galleryIndex - 1);
+    });
+
+    galleryNextBtn.addEventListener("click", function () {
+      renderGallery(galleryIndex + 1);
+    });
+
+    window.addEventListener("resize", function () {
+      renderGallery(galleryIndex);
+    });
+
+    renderGallery(0);
 
     function showBranch(index) {
       activeBranchIndex = (index + branchFigures.length) % branchFigures.length;
