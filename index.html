@@ -3,6 +3,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="theme-color" content="#fff8ed" />
   <title>EduMirror</title>
   <meta name="description" content="EduMirror project page: modeling educational social dynamics with value-driven multi-agent simulation." />
   <link rel="icon" type="image/png" href="assets/icon.png" />
@@ -34,6 +35,7 @@
     body{
       margin:0;
       min-height:100%;
+      overflow-x:hidden;
       color:var(--text);
       font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;
       line-height:1.55;
@@ -73,6 +75,16 @@
 
     a{ color:var(--cyan); text-decoration:none; }
     a:hover{ text-decoration:underline; }
+
+    a,
+    button{
+      touch-action:manipulation;
+    }
+
+    :focus-visible{
+      outline:3px solid rgba(93,91,224,.55);
+      outline-offset:3px;
+    }
 
     .wrap{
       width:min(var(--maxw), calc(100% - 36px));
@@ -1286,6 +1298,10 @@
       }
 
       .hero{ padding-top:54px; }
+      .hero-icon{
+        width:min(48vw, 320px);
+        height:auto;
+      }
       .flow-map{
         grid-template-columns:repeat(2, 1fr);
       }
@@ -1310,6 +1326,55 @@
     }
 
     @media (max-width: 640px){
+      .wrap,
+      .nav-inner{
+        width:min(var(--maxw), calc(100% - 32px));
+      }
+
+      .nav-inner{
+        align-items:stretch;
+        gap:6px;
+        min-height:auto;
+        padding:8px 0 10px;
+      }
+
+      .brand{
+        min-height:44px;
+      }
+
+      .nav-links{
+        width:100%;
+        flex-wrap:nowrap;
+        justify-content:flex-start;
+        gap:4px;
+        overflow-x:auto;
+        padding-bottom:2px;
+        scrollbar-width:none;
+        -webkit-overflow-scrolling:touch;
+      }
+
+      .nav-links::-webkit-scrollbar{
+        display:none;
+      }
+
+      .nav-links a{
+        flex:0 0 auto;
+        min-height:44px;
+        display:inline-flex;
+        align-items:center;
+        padding:0 10px;
+        border-radius:8px;
+      }
+
+      #demo-video > .wrap{
+        width:100%;
+      }
+
+      section{
+        padding:44px 0;
+        scroll-margin-top:118px;
+      }
+
       .section-head.centered h2{
         white-space:normal;
       }
@@ -1318,16 +1383,144 @@
         white-space:normal;
       }
 
-      .nav-inner{
-        align-items:flex-start;
-        flex-direction:column;
-        padding:14px 0;
+      .hero{
+        min-height:auto;
+        padding:36px 0 42px;
       }
 
-      .nav-links{ justify-content:flex-start; }
-      .hero{ min-height:auto; }
+      .hero-icon{
+        width:min(62vw, 220px);
+        margin-bottom:12px;
+      }
+
+      .title-sub{
+        max-width:20rem;
+        margin:0 auto 18px;
+        font-size:clamp(22px, 6.2vw, 28px);
+        line-height:1.18;
+      }
+
+      .authors{
+        margin:16px 0 8px;
+        font-size:16px;
+        line-height:1.6;
+      }
+
+      .affils{
+        max-width:32rem;
+        margin-top:12px;
+        font-size:15px;
+        line-height:1.55;
+        text-align:left;
+      }
+
+      .eyebrow-row{
+        margin-top:18px;
+      }
+
+      .eyebrow{
+        padding:6px 10px;
+        font-size:14px;
+      }
+
+      .btn-row{
+        width:100%;
+        display:grid;
+        grid-template-columns:repeat(3, minmax(0, 1fr));
+        gap:10px;
+        margin-top:28px;
+      }
+
+      .btn-row .btn{
+        width:100%;
+        min-width:0;
+        min-height:48px;
+        padding:10px 4px;
+        gap:4px;
+        font-size:13px;
+        white-space:nowrap;
+      }
+
+      .btn-row .btn svg{
+        width:17px;
+        height:17px;
+      }
+
+      .demo-row{
+        margin-top:14px;
+      }
+
+      .btn.demo{
+        width:100%;
+        min-width:0;
+        min-height:52px;
+        padding:13px 20px;
+        font-size:18px;
+      }
+
+      .section-head{
+        margin-bottom:20px;
+      }
+
+      .section-kicker{
+        font-size:clamp(26px, 8vw, 36px);
+        line-height:1.12;
+      }
+
+      .section-copy{
+        font-size:15px;
+        line-height:1.6;
+      }
+
+      .video-panel{
+        padding:12px;
+      }
+
+      .abstract{
+        padding:16px;
+        font-size:16px;
+        line-height:1.7;
+      }
+
+      .abstract-figure{
+        margin-bottom:16px;
+      }
+
+      .framework-figure{
+        padding:10px;
+      }
+
+      .framework-caption{
+        margin:14px 2px 2px;
+        font-size:15px;
+        line-height:1.6;
+      }
+
+      .flow{
+        padding:20px 16px;
+      }
+
+      .flow h3{
+        font-size:22px;
+      }
+
+      .flow-lead{
+        font-size:15px;
+        line-height:1.6;
+      }
+
+      .step{
+        min-height:auto;
+        padding:16px;
+      }
+
+      .step p{
+        font-size:15px;
+        line-height:1.55;
+      }
+
       .scenario-browser{
-        padding:18px 54px 46px;
+        padding:16px 48px 46px;
       }
 
       .scenario-nav{
@@ -1346,7 +1539,7 @@
       }
 
       .scenario-pie{
-        padding:22px 18px;
+        padding:18px 14px;
       }
 
       .pie-visual{
@@ -1365,7 +1558,7 @@
       .pie-tag--4{ right:12px; top:32px; }
 
       .scenario-copy{
-        padding:24px 18px;
+        padding:20px 16px;
       }
 
       .scenario-copy h3{
@@ -1378,8 +1571,15 @@
       }
 
       .intervention-grid{
-        grid-template-columns:repeat(4, minmax(140px, 1fr));
-        overflow-x:auto;
+        grid-template-columns:repeat(2, minmax(0, 1fr));
+        overflow:visible;
+        padding:4px;
+      }
+
+      .intervention-grid img{
+        width:100%;
+        height:auto;
+        aspect-ratio:1.27;
       }
 
       .experiment-card-head{
@@ -1391,10 +1591,120 @@
       }
 
       .results{
-        padding:18px;
+        padding:14px;
       }
 
-      section{ padding:52px 0; }
+      .experiment-figure{
+        padding:12px;
+      }
+
+      .experiment-figure h3{
+        margin-bottom:18px;
+        font-size:20px;
+      }
+
+      .figure-frame{
+        min-height:160px;
+      }
+
+      .figure-frame.compact{
+        min-height:200px;
+      }
+
+      .experiment-figure img,
+      .experiment-figure.wide img{
+        max-height:260px;
+      }
+
+      .experiment-note{
+        font-size:14px;
+        line-height:1.6;
+      }
+
+      .gallery figcaption{
+        padding:14px;
+        font-size:14px;
+        line-height:1.55;
+      }
+
+      .gallery figure:hover{
+        transform:none;
+        box-shadow:none;
+      }
+
+      .branch-modal{
+        padding:12px;
+      }
+
+      .branch-dialog{
+        max-height:calc(100dvh - 24px);
+        padding:12px;
+      }
+
+      .branch-dialog h3{
+        margin-top:12px;
+        font-size:20px;
+      }
+
+      .branch-dialog p{
+        font-size:15px;
+        line-height:1.55;
+      }
+
+      .branch-nav{
+        width:40px;
+        height:40px;
+      }
+
+      .branch-nav.prev{ left:8px; }
+      .branch-nav.next{ right:8px; }
+
+      .citation{
+        padding:16px;
+      }
+
+      .copy-citation{
+        top:10px;
+        right:10px;
+      }
+
+      pre{
+        padding-right:76px;
+        font-size:12px;
+      }
+
+      footer{
+        padding:34px 0 54px;
+      }
+    }
+
+    @media (max-width: 360px){
+      .btn-row{
+        grid-template-columns:1fr;
+      }
+
+      .btn-row .btn{
+        justify-content:flex-start;
+        padding-inline:14px;
+      }
+
+      .title-sub{
+        font-size:22px;
+      }
+    }
+
+    @media (prefers-reduced-motion: reduce){
+      html{
+        scroll-behavior:auto;
+      }
+
+      *,
+      *::before,
+      *::after{
+        animation-duration:.01ms !important;
+        animation-iteration-count:1 !important;
+        transition-duration:.01ms !important;
+      }
     }
   </style>
 </head>
