@@ -1,0 +1,53 @@
+/*
+ * The Read the Docs theme keeps .wy-nav-content at a narrow fixed maximum
+ * width. That is useful for API reference pages, but wastes most of a wide
+ * screen for a product guide with diagrams and tables.
+ */
+@media screen and (min-width: 769px) {
+  body,
+  .wy-nav-content-wrap,
+  .wy-nav-content {
+    background: #ffffff;
+  }
+
+  .wy-nav-content-wrap {
+    min-height: 100vh;
+  }
+
+  .wy-nav-content {
+    width: 100%;
+    max-width: none;
+    margin: 0;
+    padding: 2.5rem clamp(2rem, 5vw, 6rem);
+    box-sizing: border-box;
+  }
+
+  .rst-content {
+    width: 100%;
+    max-width: 1440px;
+    margin: 0 auto;
+  }
+
+  .rst-content img,
+  .rst-content .figure img {
+    max-width: 100%;
+    height: auto;
+  }
+
+  .rst-content table.docutils {
+    width: 100%;
+  }
+}
+
+@media screen and (max-width: 768px) {
+  .wy-nav-content {
+    width: 100%;
+    padding: 1.5rem 1rem;
+    box-sizing: border-box;
+  }
+
+  .rst-content {
+    width: 100%;
+    max-width: none;
+  }
+}
