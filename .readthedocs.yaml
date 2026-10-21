@@ -6,9 +6,9 @@ build:
     python: "3.11"
 
 sphinx:
-  configuration: docs/docs-cn/conf.py
+  configuration: docs/conf.py
   fail_on_warning: false
 
 python:
   install:
-    - requirements: docs/docs-cn/requirements.txt
+    - requirements: docs/requirements.txt
