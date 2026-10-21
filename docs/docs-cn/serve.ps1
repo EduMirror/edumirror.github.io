@@ -5,7 +5,7 @@ param(
 $ErrorActionPreference = 'Stop'
 
 Write-Host "Starting live documentation preview on http://127.0.0.1:$Port"
-Write-Host 'Save a Markdown file or an image under docs/_static; the page will rebuild and refresh automatically.'
+Write-Host 'Save a Markdown file or an image under docs/docs-cn/_static; the page will rebuild and refresh automatically.'
 
 # Use the project's EduMirror environment even when this script is launched
 # from Explorer or an unactivated PowerShell window.
